@@ -63,7 +63,7 @@ export class Analyzer {
       return GAME_STATE.IDLE;
     }
 
-    fs.writeFileSync(`./debud/screenshot${num}-text.txt`, text);
+    fs.writeFileSync(`./debug/screenshot${num}-text.txt`, text);
 
     if (text.match(REGEX_IDLE_WITH_MENU)) {
       return GAME_STATE.IDLE_WITH_MENU;
