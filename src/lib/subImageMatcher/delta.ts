@@ -8,6 +8,7 @@ export function pixelMatches(
   yOnly: boolean = false,
 ): boolean {
   if ((k + 3) >= img1.length) {
+    return false;
     throw new Error(
       `Cannot get positions ${k} through ${k + 3} from img array of length ${img1.length} (in target img)`,
     );

@@ -55,6 +55,7 @@ export class GameProcess {
     y: number,
     width: number,
     height: number,
+    grayscale: boolean,
     swapRedAndBlueChannel: boolean,
   ): Promise<Buffer> {
     // console.log(x, y, width, height);
@@ -68,7 +69,10 @@ export class GameProcess {
       (resolve: (value: Buffer | PromiseLike<Buffer>) => void, reject: (reason?: unknown) => void) => {
         const image: Jimp = new Jimp({ data: bmp.image as Buffer, width: bmp.width, height: bmp.height });
 
-        // image.grayscale();
+        if (grayscale) {
+          image.grayscale();
+        }
+
         image.getBuffer(Jimp.MIME_PNG, (err: Error | null, buffer: Buffer) => {
           if (err !== null) {
             reject(err);
@@ -93,7 +97,12 @@ export class GameProcess {
     }
   }
 
-  async getScreenshot(num: number, bounds?: Bounds, swapRedAndBlueChannel: boolean = false): Promise<Buffer> {
+  async getScreenshot(
+    num: number,
+    bounds?: Bounds,
+    grayscale: boolean = false,
+    swapRedAndBlueChannel: boolean = false,
+  ): Promise<Buffer> {
     const location: Bounds = bounds ?? this.bounds;
 
     const img: Buffer = await this.screenshot(
@@ -101,6 +110,7 @@ export class GameProcess {
       location.Top,
       location.Right - location.Left,
       location.Bottom - location.Top,
+      grayscale,
       swapRedAndBlueChannel,
     );
 
