@@ -1,0 +1,25 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true
+  },
+
+  "eslint.format.enable": true,
+  "eslint.codeActionsOnSave.mode": "problems",
+
+  "editor.rulers": [120],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[javascript][typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+
+  "typescript.referencesCodeLens.enabled": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+
+  "javascript.preferences.quoteStyle": "single",
+}

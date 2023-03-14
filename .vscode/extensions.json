@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "graphql.vscode-graphql-syntax",
+    "orta.vscode-jest",
+    "imgss.json-in-log",
+    "mikestead.dotenv",
+    "kumar-harsh.graphql-for-vscode",
+    "shd101wyy.markdown-preview-enhanced",
+  ]
+}
