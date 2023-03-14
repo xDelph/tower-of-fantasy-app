@@ -15,12 +15,16 @@ export enum GAME_STATE {
   DEFI_MENU_NO_CONFLIT = 'DEFI_MENU_NO_CONFLIT',
   DEFI_GROUPE = 'DEFI_GROUPE',
   DEFI_GROUPE_WAIT = 'DEFI_GROUPE_WAIT',
+  DEFI_LOADING = 'DEFI_LOADING',
+  DEFI_IN_PROGRESS = 'DEFI_IN_PROGRESS',
+  DEFI_FINISHED = 'DEFI_FINISHED',
 
   GROUP_TO_ACCEPT = 'GROUP_TO_ACCEPT',
 
   END_INSTANCE = 'END_INSTANCE',
 
-  TO_DEFINED = 'TO_DEFINED',
+  UNKNOWN = 'UNKNOWN',
+  VISUAL_STUDIO = 'VISUAL_STUDIO',
 }
 
 async function sleep(time: number): Promise<void> {
@@ -69,11 +73,43 @@ export class Game {
       case GAME_STATE.DEFI_GROUPE_WAIT:
         if (analyzerState === GAME_STATE.GROUP_TO_ACCEPT) {
           await this.acceptConflit();
+        } else if (
+          analyzerState === GAME_STATE.LOADING_INSTANCE
+        ) {
+          this.state = GAME_STATE.LOADING_INSTANCE;
+        } else if (
+          analyzerState === GAME_STATE.LOADING_SCREEN
+        ) {
+          this.state = GAME_STATE.LOADING_SCREEN;
         }
         break;
       case GAME_STATE.GROUP_TO_ACCEPT:
         await this.acceptConflit();
         this.state = GAME_STATE.DEFI_GROUPE_WAIT;
+        break;
+      case GAME_STATE.LOADING_INSTANCE:
+        if (analyzerState === GAME_STATE.LOADING_SCREEN) {
+          this.state = GAME_STATE.LOADING_SCREEN;
+        } else if (analyzerState === GAME_STATE.DEFI_IN_PROGRESS) {
+          this.activateAutoMode();
+          this.state = GAME_STATE.DEFI_IN_PROGRESS;
+        }
+        break;
+      case GAME_STATE.LOADING_SCREEN:
+        if (analyzerState === GAME_STATE.DEFI_IN_PROGRESS) {
+          this.activateAutoMode();
+          this.state = GAME_STATE.DEFI_IN_PROGRESS;
+        }
+        break;
+      case GAME_STATE.DEFI_IN_PROGRESS:
+        if (analyzerState === GAME_STATE.DEFI_FINISHED) {
+          this.state = GAME_STATE.DEFI_FINISHED;
+        }
+        break;
+      case GAME_STATE.DEFI_FINISHED:
+        if (analyzerState === GAME_STATE.IDLE) {
+          this.state = GAME_STATE.IDLE;
+        }
         break;
       default:
         return;
@@ -82,6 +118,7 @@ export class Game {
 
   private openAventureMenu(): void {
     if (this.state === GAME_STATE.IDLE) {
+      console.log('action: openAventureMenu');
       robot.keyToggle('alt', 'down');
 
       robot.moveMouse(
@@ -97,6 +134,7 @@ export class Game {
   }
 
   private switchToAventureDefiTab(): void {
+    console.log('action: switchToAventureDefiTab');
     robot.moveMouse(
       this.gameProcess.bounds.Left + Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.14),
       this.gameProcess.bounds.Top + Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.55),
@@ -105,6 +143,7 @@ export class Game {
   }
 
   private dragDefiCarrousel(): void {
+    console.log('action: dragDefiCarrousel');
     robot.moveMouse(
       this.gameProcess.bounds.Left +
         this.gameProcess.bounds.Right -
@@ -128,11 +167,13 @@ export class Game {
   }
 
   private prepareConflit(conflitGoLocation: [number, number]): void {
+    console.log('action: prepareConflit');
     robot.moveMouse(conflitGoLocation[0], conflitGoLocation[1]);
     robot.mouseClick();
   }
 
   private async launchConflit(): Promise<void> {
+    console.log('action: launchConflit');
     robot.moveMouse(
       this.gameProcess.bounds.Left +
         this.gameProcess.bounds.Right -
@@ -181,6 +222,7 @@ export class Game {
   }
 
   private async acceptConflit(): Promise<void> {
+    console.log('action: acceptConflit');
     robot.moveMouse(
       this.gameProcess.bounds.Left +
         this.gameProcess.bounds.Right -
@@ -191,7 +233,7 @@ export class Game {
     );
     robot.mouseClick();
 
-    await sleep(5000);
+    await sleep(500);
 
     robot.moveMouse(
       this.gameProcess.bounds.Left +
@@ -204,7 +246,21 @@ export class Game {
     robot.mouseClick();
   }
 
+  private activateAutoMode(): void {
+    console.log('action: activateAutoMode');
+    robot.keyToggle('alt', 'down');
+    robot.moveMouse(
+      this.gameProcess.bounds.Left +
+           Math.round((this.gameProcess.bounds.Left + this.gameProcess.bounds.Right) * 0.6),
+      this.gameProcess.bounds.Top +
+           Math.round((this.gameProcess.bounds.Top + this.gameProcess.bounds.Bottom) * 0.85),
+    );
+    robot.mouseClick();
+    robot.keyToggle('alt', 'up');
+  }
+
   private refuseClick(): void { // TODO RENAME TO CORRECT ACTION
+    console.log('action: refuseClick');
     robot.moveMouse(
       this.gameProcess.bounds.Left +
         this.gameProcess.bounds.Right -
@@ -214,17 +270,5 @@ export class Game {
       Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.34),
     );
     robot.mouseClick();
-
-    // enabled ? // TODO CHECK WHAT THIS DO
-
-    /* robot.keyToggle('alt', 'down');
-       robot.moveMouse(
-         this.gameProcess.bounds.Left +
-           Math.round((this.gameProcess.bounds.Left + this.gameProcess.bounds.Right) * 0.6),
-         this.gameProcess.bounds.Top +
-           Math.round((this.gameProcess.bounds.Top + this.gameProcess.bounds.Bottom) * 0.85),
-       );
-       robot.mouseClick();
-       robot.keyToggle('alt', 'up'); */
   }
 }

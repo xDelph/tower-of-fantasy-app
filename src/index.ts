@@ -1,4 +1,6 @@
-import type { GAME_STATE } from './game';
+import * as fs from 'fs';
+
+import { GAME_STATE } from './game';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -6,6 +8,7 @@ dotenv.config();
 import { Analyzer } from './analyzer';
 import { Game } from './game';
 import { GameProcess } from './gameProcess';
+
 // import { Overlay } from './overlay';
 
 const gameProcess: GameProcess = new GameProcess();
@@ -16,6 +19,11 @@ const game: Game = new Game(gameProcess);
 const analyzer: Analyzer = new Analyzer();
 
 let num: number = 0;
+
+// remove previous debug
+fs.readdirSync('./debug')
+  .filter((f: string) => /[0-9]\.(png|txt)$/.test(f))
+  .map((f: string) => fs.unlinkSync(`./debug/${f}`));
 
 (async (): Promise<void> => {
   await analyzer.init();
@@ -44,12 +52,25 @@ let num: number = 0;
 
     console.log(`\n---> NEW PROCESS TICK (number: ${num}) <---`);
 
-    const screenshot: Buffer = await gameProcess.getScreenshot(num);
-    const state: GAME_STATE = await analyzer.analyze(num, screenshot);
+    let screenshot: Buffer = await gameProcess.getScreenshot(num);
+    let state: GAME_STATE = await analyzer.analyze(num, screenshot);
+
+    if (state === GAME_STATE.UNKNOWN) {
+      screenshot = await gameProcess.getScreenshot(
+        num,
+        {
+          Left: gameProcess.bounds.Left,
+          Right: Math.round((gameProcess.bounds.Right - gameProcess.bounds.Left) * 0.15),
+          Top: gameProcess.bounds.Top,
+          Bottom: Math.round((gameProcess.bounds.Bottom - gameProcess.bounds.Top) * 0.15),
+        },
+      );
+      state = await analyzer.analyze(num, screenshot);
+    }
 
     console.log('Analyzer state:', state);
     console.log('Before Game state:', game.state);
-    await game.doConflit(state, analyzer.conflitGoLocation);
+    // await game.doConflit(state, analyzer.conflitGoLocation);
     console.log('After Game state:', game.state);
 
     num += 1;

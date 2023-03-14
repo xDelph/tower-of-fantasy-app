@@ -9,9 +9,9 @@ import { GAME_STATE } from './game';
 const VISUAL_STUDIO: RegExp = /(Visual Studio)/;
 
 const REGEX_IDLE: RegExp = /(Canal)/;
-const REGEX_IDLE_WITH_MENU: RegExp = /(Canal)[\S\s]*(Suppresseurs|uppresseurs)/;
+const REGEX_IDLE_WITH_MENU: RegExp = /(Bazar)[\S\s]*(Suppresseurs|uppresseurs)/;
 
-const REGEX_LOADING_INSTANCE: RegExp = /(Transmission)/;
+const REGEX_LOADING_INSTANCE: RegExp = /(transmission)/;
 const REGEX_LOADING_SCREEN: RegExp = /(Tour fantastique)/;
 
 const REGEX_AVENTURE_MENU: RegExp = /(150|300|450|600|750|900|hebdomadaire)/;
@@ -21,6 +21,8 @@ const REGEX_DEFI_MENU_CONFLIT: RegExp = /(Conflit|frontalier)/;
 const REGEX_DEFI_POPUP: RegExp = /(du jour)/;
 const REGEX_DEFI_POPUP_WAIT: RegExp = /(Attendre des membres du groupe)/;
 const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(Compte)[\S\s]*(rebours)/;
+const REGEX_DEFI_STARTING: RegExp = /(07:)/;
+const REGEX_DEFI_ENDING: RegExp = /(vain)[\S\s]*(dans)[\S\s]*(secondes)/;
 
 const REGEX_END_INSTANCE: RegExp = /(secondes|fermer)/;
 
@@ -60,10 +62,10 @@ export class Analyzer {
 
     if (text.match(VISUAL_STUDIO)) {
       // TOF not anymore in front
-      return GAME_STATE.IDLE;
+      return GAME_STATE.VISUAL_STUDIO;
     }
 
-    fs.writeFileSync(`./debug/screenshot${num}-text.txt`, text);
+    fs.writeFileSync(`./debug/screenshot${num}.txt`, text);
 
     if (text.match(REGEX_IDLE_WITH_MENU)) {
       return GAME_STATE.IDLE_WITH_MENU;
@@ -104,6 +106,14 @@ export class Analyzer {
       return GAME_STATE.DEFI_MENU_NO_CONFLIT;
     }
 
+    if (text.match(REGEX_DEFI_STARTING)) {
+      return GAME_STATE.DEFI_IN_PROGRESS;
+    }
+
+    if (text.match(REGEX_DEFI_ENDING)) {
+      return GAME_STATE.DEFI_FINISHED;
+    }
+
     if (text.match(REGEX_AVENTURE_MENU)) {
       return GAME_STATE.AVENTURE_MENU;
     }
@@ -113,7 +123,7 @@ export class Analyzer {
     }
 
     if (text.match(REGEX_DEFI_POPUP_WAIT)) {
-      return GAME_STATE.TO_DEFINED;
+      return GAME_STATE.DEFI_GROUPE_WAIT;
     }
 
     if (text.match(REGEX_DEFI_POPUP_TO_ACCEPT)) {
@@ -124,8 +134,8 @@ export class Analyzer {
       return GAME_STATE.END_INSTANCE;
     }
 
-    console.error('nothing match, returning idle state');
+    console.error('nothing match, returning unknown state');
 
-    return GAME_STATE.IDLE;
+    return GAME_STATE.UNKNOWN;
   }
 }
