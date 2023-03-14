@@ -45,8 +45,15 @@ export class Game {
         this.state = GAME_STATE.DEFI_MENU_NO_CONFLIT;
         break;
       case GAME_STATE.DEFI_MENU_NO_CONFLIT:
-        this.dragDefiCarrousel();
-        this.state = GAME_STATE.DEFI_MENU_CONFLIT;
+        if (analyzerState === GAME_STATE.DEFI_MENU_CONFLIT) {
+          this.prepareConflit(conflitGoLocation);
+          await sleep(500);
+          await this.launchConflit();
+          this.state = GAME_STATE.DEFI_GROUPE_WAIT;
+        } else {
+          this.dragDefiCarrousel();
+          this.state = GAME_STATE.DEFI_MENU_CONFLIT;
+        }
         break;
       case GAME_STATE.DEFI_MENU_CONFLIT:
         this.prepareConflit(conflitGoLocation);
@@ -66,7 +73,7 @@ export class Game {
         break;
       case GAME_STATE.GROUP_TO_ACCEPT:
         await this.acceptConflit();
-        this.state = GAME_STATE.GROUP_TO_ACCEPT;
+        this.state = GAME_STATE.DEFI_GROUPE_WAIT;
         break;
       default:
         return;
@@ -138,27 +145,27 @@ export class Game {
 
     await sleep(500);
 
-    // entre
-    robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.65),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
-    );
-    robot.mouseClick();
-
-    /* groupe
+    /* entre
        robot.moveMouse(
          this.gameProcess.bounds.Left +
            this.gameProcess.bounds.Right -
-           Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
+           Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.65),
          this.gameProcess.bounds.Top +
            this.gameProcess.bounds.Bottom -
            Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
        );
        robot.mouseClick(); */
+
+    /* groupe */
+    robot.moveMouse(
+      this.gameProcess.bounds.Left +
+        this.gameProcess.bounds.Right -
+        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
+      this.gameProcess.bounds.Top +
+        this.gameProcess.bounds.Bottom -
+        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
+    );
+    robot.mouseClick();
 
     /* // test in progress, cancel matchmaking
        await sleep(50);
@@ -184,7 +191,7 @@ export class Game {
     );
     robot.mouseClick();
 
-    await sleep(10000);
+    await sleep(5000);
 
     robot.moveMouse(
       this.gameProcess.bounds.Left +

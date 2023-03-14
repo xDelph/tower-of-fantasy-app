@@ -1,9 +1,12 @@
 // import type { Overlay } from './overlay.ts';
 
+import * as fs from 'fs';
+
 import * as tesseract from 'tesseract.js';
-// import * as fs from 'fs';
 
 import { GAME_STATE } from './game';
+
+const VISUAL_STUDIO: RegExp = /(Visual Studio)/;
 
 const REGEX_IDLE: RegExp = /(Canal)/;
 const REGEX_IDLE_WITH_MENU: RegExp = /(Canal)[\S\s]*(Suppresseurs|uppresseurs)/;
@@ -52,9 +55,15 @@ export class Analyzer {
     await this.worker.initialize(this.lang);
   }
 
-  async analyze(screenshot: Buffer): Promise<GAME_STATE> {
+  async analyze(num: number, screenshot: Buffer): Promise<GAME_STATE> {
     const { data: { text, words } } = await this.worker.recognize(screenshot);
-    // console.log(text);
+
+    if (text.match(VISUAL_STUDIO)) {
+      // TOF not anymore in front
+      return GAME_STATE.IDLE;
+    }
+
+    fs.writeFileSync(`./debud/screenshot${num}-text.txt`, text);
 
     if (text.match(REGEX_IDLE_WITH_MENU)) {
       return GAME_STATE.IDLE_WITH_MENU;
@@ -70,10 +79,6 @@ export class Analyzer {
 
     if (text.match(REGEX_LOADING_SCREEN)) {
       return GAME_STATE.LOADING_SCREEN;
-    }
-
-    if (text.match(REGEX_AVENTURE_MENU)) {
-      return GAME_STATE.AVENTURE_MENU;
     }
 
     if (text.match(REGEX_DEFI_MENU)) {
@@ -99,6 +104,10 @@ export class Analyzer {
       return GAME_STATE.DEFI_MENU_NO_CONFLIT;
     }
 
+    if (text.match(REGEX_AVENTURE_MENU)) {
+      return GAME_STATE.AVENTURE_MENU;
+    }
+
     if (text.match(REGEX_DEFI_POPUP)) {
       return GAME_STATE.DEFI_GROUPE;
     }
@@ -115,7 +124,7 @@ export class Analyzer {
       return GAME_STATE.END_INSTANCE;
     }
 
-    console.log('-----> nothing match, returning idle state');
+    console.error('nothing match, returning idle state');
 
     return GAME_STATE.IDLE;
   }

@@ -93,7 +93,7 @@ export class GameProcess {
     }
   }
 
-  async getScreenshot(swapRedAndBlueChannel: boolean = false): Promise<Buffer> {
+  async getScreenshot(num: number, swapRedAndBlueChannel: boolean = false): Promise<Buffer> {
     const img: Buffer = await this.screenshot(
       this.bounds.Left,
       this.bounds.Top,
@@ -103,7 +103,7 @@ export class GameProcess {
     );
 
     if (process.env.SAVE_SCREEN_SHOT === 'true') {
-      fs.writeFileSync('./debug/screenshot.png', Buffer.from(img));
+      fs.writeFileSync(`./debug/screenshot${num}.png`, Buffer.from(img));
     }
 
     return img;

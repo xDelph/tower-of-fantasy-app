@@ -15,12 +15,12 @@ const game: Game = new Game(gameProcess);
 
 const analyzer: Analyzer = new Analyzer();
 
-await (async (): Promise<void> => {
+let num: number = 0;
+
+(async (): Promise<void> => {
   await analyzer.init();
 
   async function loop(): Promise<void> {
-    console.log('--- PROCESS TICK ---');
-
     if (!gameProcess.isProcessInForeground()) {
       if (process.env.FOREGROUND_WARN === 'true') {
         console.log('-----------------------------------');
@@ -34,7 +34,7 @@ await (async (): Promise<void> => {
         () => {
           void (async (): Promise<void> => {
             await loop();
-          });
+          })();
         },
         5_000,
       );
@@ -42,25 +42,32 @@ await (async (): Promise<void> => {
       return;
     }
 
-    const screenshot: Buffer = await gameProcess.getScreenshot();
-    const state: GAME_STATE = await analyzer.analyze(screenshot);
+    console.log(`\n---> NEW PROCESS TICK (number: ${num}) <---`);
+
+    const screenshot: Buffer = await gameProcess.getScreenshot(num);
+    const state: GAME_STATE = await analyzer.analyze(num, screenshot);
 
     console.log('Analyzer state:', state);
+    console.log('Before Game state:', game.state);
     await game.doConflit(state, analyzer.conflitGoLocation);
-    console.log('Game state:', game.state);
+    console.log('After Game state:', game.state);
+
+    num += 1;
 
     setTimeout(
       () => {
         void (async (): Promise<void> => {
           await loop();
-        });
+        })();
       },
       0,
     );
   }
 
   await loop();
-})();
+})().catch((e: Error) => {
+  console.error(e);
+});
 
 process.on('exit', (code: number) => {
   console.log(`About to exit with code: ${code}`);
