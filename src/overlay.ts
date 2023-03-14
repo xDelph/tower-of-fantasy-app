@@ -5,7 +5,7 @@ app.disableHardwareAcceleration();
 
 export class Overlay {
 
-  private window: BrowserWindow;
+  private window!: BrowserWindow;
   private readonly nbChestOpened: string = 'NoData';
 
   private readonly toggleExitKey: string = 'CmdOrCtrl + E';

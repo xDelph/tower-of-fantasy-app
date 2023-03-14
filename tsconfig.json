@@ -1,46 +1,22 @@
 {
 	"compileOnSave": false,
-  "ts-node": {
-    "transpileOnly": true,
-    "files": true,
-    // Tell ts-node CLI to install the --loader automatically, explained below
-    "esm": true,
-    "compilerOptions": {
-      "module": "ES2022"
-    }
-  },
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "baseUrl": "src",
-    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "incremental": true,
-    "lib": ["ES2021"],
-    "module": "ES2022",
+    "lib": ["ES5"],
+    "module": "CommonJS",
     "moduleResolution": "Node",
-    "noEmitOnError": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "outDir": "./dist",
-    "paths": {
-      "*": ["src/types/*"]
-    },
-    "pretty": false,
-    "removeComments": true,
     "resolveJsonModule": true,
+    "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "target": "ES2021",
+    "target": "ES5",
     "types": ["node"],
     "typeRoots": ["node_modules/@types"]
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "./build/**/*", "tmp", "dist", "scripts", "debug", "resources"]
 }
+
+

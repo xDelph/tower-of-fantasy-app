@@ -4,14 +4,14 @@ import type { PNGWithMetadata } from 'pngjs';
 
 import { PNG } from 'pngjs';
 
-// @ts-ignore
-import { subImageMatch } from './lib/subImageMatcher.ts';
+import { subImageMatch } from './lib/subImageMatcher';
 
 export class Resource {
   private readonly cache: Record<string, PNGWithMetadata | undefined>;
   private readonly threshold: number;
 
   constructor(threshold: number = 0.3) {
+    this.cache = {};
     this.threshold = threshold;
   }
 

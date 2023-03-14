@@ -12,9 +12,9 @@ export interface Bounds {
 };
 
 export class GameProcess {
-  private pid: string;
+  private pid!: string;
 
-  bounds: Bounds;
+  bounds!: Bounds;
 
   constructor() {
     this.getPid();

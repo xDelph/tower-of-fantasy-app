@@ -1,5 +1,4 @@
-// @ts-ignore
-import type { GameProcess } from './gameProcess.ts';
+import type { GameProcess } from './gameProcess';
 
 import robot from 'robotjs';
 
@@ -25,7 +24,7 @@ export enum GAME_STATE {
 }
 
 async function sleep(time: number): Promise<void> {
-  return new Promise((resolve: (value: void) => void) => setTimeout(resolve, time));
+  return new Promise((resolve: () => void) => setTimeout(resolve, time));
 }
 
 export class Game {
@@ -34,7 +33,7 @@ export class Game {
   constructor(private readonly gameProcess: GameProcess) {}
 
   async doConflit(analyzerState: GAME_STATE, conflitGoLocation: [number, number]): Promise<void> {
-    switch (this.state)  {
+    switch (this.state) {
       case GAME_STATE.IDLE:
         this.openAventureMenu();
         await sleep(500);
@@ -106,9 +105,9 @@ export class Game {
       this.gameProcess.bounds.Top +
         this.gameProcess.bounds.Bottom -
         Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.50),
-    )
-    
-    robot.mouseToggle("down");
+    );
+
+    robot.mouseToggle('down');
     robot.moveMouseSmooth(
       this.gameProcess.bounds.Left +
         this.gameProcess.bounds.Right -
@@ -118,7 +117,7 @@ export class Game {
         Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.50),
       1,
     );
-    robot.mouseToggle("up");
+    robot.mouseToggle('up');
   }
 
   private prepareConflit(conflitGoLocation: [number, number]): void {
@@ -136,9 +135,9 @@ export class Game {
         Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.25),
     );
     robot.mouseClick();
-    
+
     await sleep(500);
-    
+
     // entre
     robot.moveMouse(
       this.gameProcess.bounds.Left +
@@ -150,28 +149,28 @@ export class Game {
     );
     robot.mouseClick();
 
-    // groupe
-    // robot.moveMouse(
-    //   this.gameProcess.bounds.Left +
-    //     this.gameProcess.bounds.Right -
-    //     Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
-    //   this.gameProcess.bounds.Top +
-    //     this.gameProcess.bounds.Bottom -
-    //     Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
-    // );
-    // robot.mouseClick();
+    /* groupe
+       robot.moveMouse(
+         this.gameProcess.bounds.Left +
+           this.gameProcess.bounds.Right -
+           Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
+         this.gameProcess.bounds.Top +
+           this.gameProcess.bounds.Bottom -
+           Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
+       );
+       robot.mouseClick(); */
 
-    // // test in progress, cancel matchmaking
-    // await sleep(50);
-    // robot.moveMouse(
-    //   this.gameProcess.bounds.Left +
-    //     this.gameProcess.bounds.Right -
-    //     Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
-    //   this.gameProcess.bounds.Top +
-    //     this.gameProcess.bounds.Bottom -
-    //     Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
-    // );
-    // robot.mouseClick();
+    /* // test in progress, cancel matchmaking
+       await sleep(50);
+       robot.moveMouse(
+         this.gameProcess.bounds.Left +
+           this.gameProcess.bounds.Right -
+           Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
+         this.gameProcess.bounds.Top +
+           this.gameProcess.bounds.Bottom -
+           Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
+       );
+       robot.mouseClick(); */
   }
 
   private async acceptConflit(): Promise<void> {

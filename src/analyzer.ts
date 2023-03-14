@@ -1,11 +1,9 @@
-// @ts-ignore
 // import type { Overlay } from './overlay.ts';
 
 import * as tesseract from 'tesseract.js';
 // import * as fs from 'fs';
 
-// @ts-ignore
-import { GAME_STATE } from './game.ts';
+import { GAME_STATE } from './game';
 
 const REGEX_IDLE: RegExp = /(Canal)/;
 const REGEX_IDLE_WITH_MENU: RegExp = /(Canal)[\S\s]*(Suppresseurs|uppresseurs)/;
@@ -22,6 +20,11 @@ const REGEX_DEFI_POPUP_WAIT: RegExp = /(Attendre des membres du groupe)/;
 const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(Compte)[\S\s]*(rebours)/;
 
 const REGEX_END_INSTANCE: RegExp = /(secondes|fermer)/;
+
+interface Word {
+  text: string;
+  bbox: tesseract.Bbox
+}
 
 export class Analyzer {
   private readonly worker: tesseract.Worker;
@@ -52,11 +55,11 @@ export class Analyzer {
   async analyze(screenshot: Buffer): Promise<GAME_STATE> {
     const { data: { text, words } } = await this.worker.recognize(screenshot);
     // console.log(text);
-    
+
     if (text.match(REGEX_IDLE_WITH_MENU)) {
       return GAME_STATE.IDLE_WITH_MENU;
     }
-    
+
     if (text.match(REGEX_IDLE)) {
       return GAME_STATE.IDLE;
     }
@@ -75,14 +78,16 @@ export class Analyzer {
 
     if (text.match(REGEX_DEFI_MENU)) {
       if (text.match(REGEX_DEFI_MENU_CONFLIT)) {
-        const matches: any = words
-          .filter((w: any) => w.text.match(REGEX_DEFI_MENU_CONFLIT) || w.text.match(/(aller|12h00)/))
-          .map((w: any) => ({ text: w.text, bbox: w.bbox }));
-        
+        const matches: Word[] = words
+          .filter((w: tesseract.Word) => w.text.match(REGEX_DEFI_MENU_CONFLIT) ?? w.text.match(/(aller|12h00)/))
+          .map((w: tesseract.Word) => ({ text: w.text, bbox: w.bbox }));
+
         const x: number | undefined = matches
-          .filter((w: any) => w.text.match(REGEX_DEFI_MENU_CONFLIT))[0]?.bbox.x1;
+          .filter((w: Word) => w.text.match(REGEX_DEFI_MENU_CONFLIT))
+          .at(0)?.bbox.x1;
         const y: number | undefined = matches
-            .filter((w: any) => w.text.match(/(aller|12h00)/))[0]?.bbox.y1;
+          .filter((w: Word) => w.text.match(/(aller|12h00)/))
+          .at(0)?.bbox.y1;
 
         if (x !== undefined && y !== undefined) {
           this.conflitGoLocation = [x, y];
@@ -91,7 +96,7 @@ export class Analyzer {
         return GAME_STATE.DEFI_MENU_CONFLIT;
       }
 
-      return GAME_STATE.DEFI_MENU_NO_CONFLIT
+      return GAME_STATE.DEFI_MENU_NO_CONFLIT;
     }
 
     if (text.match(REGEX_DEFI_POPUP)) {
@@ -111,6 +116,7 @@ export class Analyzer {
     }
 
     console.log('-----> nothing match, returning idle state');
+
     return GAME_STATE.IDLE;
   }
 }
