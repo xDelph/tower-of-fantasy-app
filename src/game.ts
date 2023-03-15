@@ -149,7 +149,9 @@ export class Game {
         break;
       case GAME_STATE.DEFI_FINISHED_TO_EXIT:
         await this.exitConflit();
-        this.state = GAME_STATE.IDLE;
+        if (analyzerState === GAME_STATE.IDLE) {
+          this.state = GAME_STATE.IDLE;
+        }
         break;
       default:
         return;
