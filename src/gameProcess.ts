@@ -28,7 +28,8 @@ export class GameProcess {
     );
 
     this.pid = (windows.stdout.toString().split('\n').find((x: string) => x.includes('QRSL')) ?? 'Error')
-      .split(' ')[0];
+      .split(' ')
+      .filter((x: string) => x !== '')[0];
 
     if (this.pid.includes('Error')) {
       console.log('[Error]: You didn\'t launch TOF');

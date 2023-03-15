@@ -1,11 +1,10 @@
 import * as fs from 'fs';
 
-import { GAME_STATE } from './game';
-
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { Analyzer } from './analyzer';
+import { GAME_STATE } from './game';
 import { Game } from './game';
 import { GameProcess } from './gameProcess';
 import { Resource } from './resource';
@@ -108,7 +107,8 @@ process.on('exit', (code: number) => {
   console.log(`About to exit with code: ${code}`);
 });
 
-process.on('error', () => {
+process.on('error', (e: Error) => {
+  console.error(e);
   process.exit(-1);
 });
 

@@ -20,8 +20,8 @@ const REGEX_DEFI_MENU: RegExp = /(llimité|Illimité|Hllimité|Hlimité)/;
 const REGEX_DEFI_MENU_CONFLIT: RegExp = /(Conflit|frontalier)/;
 const REGEX_DEFI_POPUP: RegExp = /(du jour)/;
 const REGEX_DEFI_POPUP_WAIT: RegExp = /(Attendre des membres du groupe)/;
-const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(Compte)[\S\s]*(rebours)/;
-const REGEX_DEFI_STARTING: RegExp = /(07:)/;
+const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(matériaux)[\S\s]*(récompenses)/;
+const REGEX_DEFI_STARTING: RegExp = /(07:|08:)/;
 const REGEX_DEFI_ENDING: RegExp = /(vain)[\S\s]*(dans)[\S\s]*(secondes)/;
 
 const REGEX_END_INSTANCE: RegExp = /(secondes|fermer)/;

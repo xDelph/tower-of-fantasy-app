@@ -2,6 +2,8 @@ import type { GameProcess } from './gameProcess';
 
 import robot from 'robotjs';
 
+import * as resolutions from './config/resolutions.json';
+
 export enum GAME_STATE {
   IDLE = 'IDLE',
   IDLE_WITH_MENU = 'IDLE_WITH_MENU',
@@ -27,14 +29,45 @@ export enum GAME_STATE {
   VISUAL_STUDIO = 'VISUAL_STUDIO',
 }
 
+interface ResolutionConfigCoord {
+  x: number;
+  y: number;
+}
+
+interface ResolutionConfig {
+  activity_button: ResolutionConfigCoord;
+  activity_defi_tab: ResolutionConfigCoord;
+  activity_defi_caroussel_start: ResolutionConfigCoord;
+  activity_defi_caroussel_stop: ResolutionConfigCoord;
+  activity_defi_go: ResolutionConfigCoord;
+  activity_defi_group: ResolutionConfigCoord;
+  activity_defi_help: ResolutionConfigCoord;
+  activity_defi_accept: ResolutionConfigCoord;
+  conflit_auto: ResolutionConfigCoord;
+}
+
 async function sleep(time: number): Promise<void> {
   return new Promise((resolve: () => void) => setTimeout(resolve, time));
 }
 
 export class Game {
   state: GAME_STATE = GAME_STATE.IDLE;
+  private readonly resolutionConfig: ResolutionConfig;
 
-  constructor(private readonly gameProcess: GameProcess) {}
+  constructor(private readonly gameProcess: GameProcess) {
+    const typedResolutions: Record<string, ResolutionConfig | undefined>
+      = resolutions as Record<string, ResolutionConfig | undefined>;
+
+    const resolutionConfig: ResolutionConfig | undefined =
+      typedResolutions[`${gameProcess.bounds.Right}x${gameProcess.bounds.Bottom}`] ??
+      typedResolutions[Object.keys(resolutions)[0]];
+
+    if (resolutionConfig === undefined) {
+      throw new Error('At least one resolution config is needed in ./config/resolutions.jons');
+    }
+
+    this.resolutionConfig = resolutionConfig;
+  }
 
   async doConflit(analyzerState: GAME_STATE, conflitGoLocation: [number, number]): Promise<void> {
     switch (this.state) {
@@ -122,10 +155,8 @@ export class Game {
       robot.keyToggle('alt', 'down');
 
       robot.moveMouse(
-        this.gameProcess.bounds.Left +
-          this.gameProcess.bounds.Right -
-          Math.round((this.gameProcess.bounds.Left + this.gameProcess.bounds.Right) * 0.119),
-        this.gameProcess.bounds.Top + 50,
+        this.resolutionConfig.activity_button.x,
+        this.resolutionConfig.activity_button.y,
       );
       robot.mouseClick();
 
@@ -136,8 +167,8 @@ export class Game {
   private switchToAventureDefiTab(): void {
     console.log('action: switchToAventureDefiTab');
     robot.moveMouse(
-      this.gameProcess.bounds.Left + Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.14),
-      this.gameProcess.bounds.Top + Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.55),
+      this.resolutionConfig.activity_defi_tab.x,
+      this.resolutionConfig.activity_defi_tab.y,
     );
     robot.mouseClick();
   }
@@ -145,22 +176,14 @@ export class Game {
   private dragDefiCarrousel(): void {
     console.log('action: dragDefiCarrousel');
     robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.19),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.50),
+      this.resolutionConfig.activity_defi_caroussel_start.x,
+      this.resolutionConfig.activity_defi_caroussel_start.y,
     );
 
     robot.mouseToggle('down');
     robot.moveMouseSmooth(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.75),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.50),
+      this.resolutionConfig.activity_defi_caroussel_stop.x,
+      this.resolutionConfig.activity_defi_caroussel_stop.y,
       1,
     );
     robot.mouseToggle('up');
@@ -175,73 +198,33 @@ export class Game {
   private async launchConflit(): Promise<void> {
     console.log('action: launchConflit');
     robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.25),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.25),
+      this.resolutionConfig.activity_defi_go.x,
+      this.resolutionConfig.activity_defi_go.y,
     );
     robot.mouseClick();
 
     await sleep(500);
 
-    /* entre
-       robot.moveMouse(
-         this.gameProcess.bounds.Left +
-           this.gameProcess.bounds.Right -
-           Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.65),
-         this.gameProcess.bounds.Top +
-           this.gameProcess.bounds.Bottom -
-           Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
-       );
-       robot.mouseClick(); */
-
-    /* groupe */
     robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
+      this.resolutionConfig.activity_defi_group.x,
+      this.resolutionConfig.activity_defi_group.y,
     );
     robot.mouseClick();
-
-    /* // test in progress, cancel matchmaking
-       await sleep(50);
-       robot.moveMouse(
-         this.gameProcess.bounds.Left +
-           this.gameProcess.bounds.Right -
-           Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.35),
-         this.gameProcess.bounds.Top +
-           this.gameProcess.bounds.Bottom -
-           Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.45),
-       );
-       robot.mouseClick(); */
   }
 
   private async acceptConflit(): Promise<void> {
     console.log('action: acceptConflit');
     robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.58),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.20),
+      this.resolutionConfig.activity_defi_help.x,
+      this.resolutionConfig.activity_defi_help.y,
     );
     robot.mouseClick();
 
     await sleep(500);
 
     robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.40),
-      this.gameProcess.bounds.Top +
-        this.gameProcess.bounds.Bottom -
-        Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.27),
+      this.resolutionConfig.activity_defi_accept.x,
+      this.resolutionConfig.activity_defi_accept.y,
     );
     robot.mouseClick();
   }
@@ -250,25 +233,10 @@ export class Game {
     console.log('action: activateAutoMode');
     robot.keyToggle('alt', 'down');
     robot.moveMouse(
-      this.gameProcess.bounds.Left +
-           Math.round((this.gameProcess.bounds.Left + this.gameProcess.bounds.Right) * 0.6),
-      this.gameProcess.bounds.Top +
-           Math.round((this.gameProcess.bounds.Top + this.gameProcess.bounds.Bottom) * 0.85),
+      this.resolutionConfig.conflit_auto.x,
+      this.resolutionConfig.conflit_auto.y,
     );
     robot.mouseClick();
     robot.keyToggle('alt', 'up');
-  }
-
-  private refuseClick(): void { // TODO RENAME TO CORRECT ACTION
-    console.log('action: refuseClick');
-    robot.moveMouse(
-      this.gameProcess.bounds.Left +
-        this.gameProcess.bounds.Right -
-        Math.round((this.gameProcess.bounds.Right - this.gameProcess.bounds.Left) * 0.41),
-      this.gameProcess.bounds.Top +
-      this.gameProcess.bounds.Bottom -
-      Math.round((this.gameProcess.bounds.Bottom - this.gameProcess.bounds.Top) * 0.34),
-    );
-    robot.mouseClick();
   }
 }
