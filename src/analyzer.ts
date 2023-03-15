@@ -66,7 +66,9 @@ export class Analyzer {
       return GAME_STATE.VISUAL_STUDIO;
     }
 
-    fs.writeFileSync(`./debug/screenshot${num}.txt`, text);
+    if (process.env.SAVE_SCREEN_SHOT === 'true') {
+      fs.writeFileSync(`./debug/screenshot${num}.txt`, text);
+    }
 
     if (text.match(REGEX_IDLE_WITH_MENU)) {
       return GAME_STATE.IDLE_WITH_MENU;
