@@ -21,7 +21,7 @@ const REGEX_DEFI_MENU_CONFLIT: RegExp = /(Conflit|frontalier)/;
 const REGEX_DEFI_POPUP: RegExp = /(du jour)/;
 const REGEX_DEFI_POPUP_WAIT: RegExp = /(Attendre des membres du groupe)/;
 const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(matériaux)[\S\s]*(récompenses)/;
-const REGEX_DEFI_STARTING: RegExp = /(07:|08:|01:)/;
+const REGEX_DEFI_STARTING: RegExp = /(07:|08:)/;
 const REGEX_DEFI_ENDING: RegExp = /(Compte)[\S\s]*(dans)[\S\s]*(secondes)/;
 const REGEX_DEFI_CAN_EXIT: RegExp = /(Appuyer)[\S\s]*(importe)[\S\s]*(fermer)/;
 

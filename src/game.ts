@@ -21,6 +21,7 @@ export enum GAME_STATE {
   DEFI_IN_PROGRESS = 'DEFI_IN_PROGRESS',
   DEFI_FINISHED = 'DEFI_FINISHED',
   DEFI_FINISHED_TO_EXIT = 'DEFI_FINISHED_TO_EXIT',
+  DEFI_FINISHED_RETURN = 'DEFI_FINISHED_RETURN',
 
   GROUP_TO_ACCEPT = 'GROUP_TO_ACCEPT',
 
@@ -149,6 +150,9 @@ export class Game {
         break;
       case GAME_STATE.DEFI_FINISHED_TO_EXIT:
         await this.exitConflit();
+        this.state = GAME_STATE.DEFI_FINISHED_RETURN;
+        break;
+      case GAME_STATE.DEFI_FINISHED_RETURN:
         if (analyzerState === GAME_STATE.IDLE) {
           this.state = GAME_STATE.IDLE;
         }
