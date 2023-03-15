@@ -55,23 +55,23 @@ fs.readdirSync('./debug')
 
     // const start: number = Date.now();
 
-    /* for (let i: number = 0; i < 25; i++) {
-         const screenshot: Buffer = await gameProcess.getScreenshot(
-           i,
-           {
-             Left: 250,
-             Right: 500,
-             Top: 650,
-             Bottom: 750,
-           },
-           false,
-           true,
-         );
-         await analyzer.analyze(i, screenshot);
-       } */
+    // for (let i: number = 0; i < 25; i++) {
+    //   const screenshot: Buffer = await gameProcess.getScreenshot(
+    //     i,
+    //     {
+    //       Left: 250,
+    //       Right: 500,
+    //       Top: 650,
+    //       Bottom: 750,
+    //     },
+    //     false,
+    //     true,
+    //   );
+    //   await analyzer.analyze(i, screenshot);
+    // }
 
-    /* const end: number = Date.now();
-       console.log('time', end-start); */
+    // const end: number = Date.now();
+    // console.log('time', end-start);
 
     // process.exit(0);
 

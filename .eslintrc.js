@@ -111,7 +111,7 @@ module.exports = {
     ],
     "max-len": ["warn", { "code": 120 }],
     "space-before-blocks": ["warn"],
-    "multiline-comment-style": ["error", "bare-block"],
+    // "multiline-comment-style": ["error", "bare-block"],
     "no-prototype-builtins": "off",
     "no-case-declarations": "warn",
     "padding-line-between-statements": [
