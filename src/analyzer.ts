@@ -56,6 +56,10 @@ export class Analyzer {
 
     await this.worker.loadLanguage(this.lang);
     await this.worker.initialize(this.lang);
+
+    await this.worker.setParameters({
+      tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÈÉabcdefghijklmnopqrstuvwxyzàèé0123456789: ',
+    });
   }
 
   async analyze(num: number, screenshot: Buffer): Promise<GAME_STATE> {

@@ -88,13 +88,17 @@ fs.readdirSync('./debug')
 
     num += 1;
 
+    if (num === 25) {
+      num = 0;
+    }
+
     setTimeout(
       () => {
         void (async (): Promise<void> => {
           await loop();
         })();
       },
-      game.state === GAME_STATE.DEFI_IN_PROGRESS ? 10_000 : 0,
+      game.state === GAME_STATE.DEFI_IN_PROGRESS ? 10_000 : 1_000,
     );
   }
 
