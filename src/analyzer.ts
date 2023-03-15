@@ -22,7 +22,7 @@ const REGEX_DEFI_POPUP: RegExp = /(du jour)/;
 const REGEX_DEFI_POPUP_WAIT: RegExp = /(Attendre des membres du groupe)/;
 const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(matériaux)[\S\s]*(récompenses)/;
 const REGEX_DEFI_STARTING: RegExp = /(07:|08:)/;
-const REGEX_DEFI_STARTING_2: RegExp = /(Attention)[\S\s]*(arrive)/;
+const REGEX_DEFI_STARTING_2: RegExp = /(assistance)[\S\s]*(bataille)/;
 const REGEX_DEFI_ENDING: RegExp = /(Compte)[\S\s]*(dans)[\S\s]*(secondes)/;
 const REGEX_DEFI_CAN_EXIT: RegExp = /(Appuyer)[\S\s]*(importe)[\S\s]*(fermer)/;
 
@@ -34,7 +34,7 @@ interface Word {
 }
 
 export class Analyzer {
-  private readonly worker: tesseract.Worker;
+  private worker!: tesseract.Worker;
   private readonly lang: string;
 
   conflitGoLocation: [number, number] = [-1, -1];
@@ -42,7 +42,11 @@ export class Analyzer {
   constructor(
     // private readonly overlay: Overlay,
   ) {
-    this.worker = tesseract.createWorker({
+    this.lang = process.env.TESSERACT_LANGUAGE ?? 'fra';
+  }
+
+  async init(): Promise<void> {
+    this.worker = await tesseract.createWorker({
       logger: (m: unknown) => {
         if (process.env.OCR_LOG === 'true') {
           console.log(m);
@@ -50,11 +54,6 @@ export class Analyzer {
       },
     });
 
-    this.lang = process.env.TESSERACT_LANGUAGE ?? 'fra';
-  }
-
-  async init(): Promise<void> {
-    await this.worker.load();
     await this.worker.loadLanguage(this.lang);
     await this.worker.initialize(this.lang);
   }
