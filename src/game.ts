@@ -142,6 +142,9 @@ export class Game {
         if (analyzerState === GAME_STATE.DEFI_FINISHED) {
           this.state = GAME_STATE.DEFI_FINISHED;
         }
+        if (analyzerState === GAME_STATE.DEFI_FINISHED_TO_EXIT) {
+          this.state = GAME_STATE.DEFI_FINISHED_TO_EXIT;
+        }
         break;
       case GAME_STATE.DEFI_FINISHED:
         if (analyzerState === GAME_STATE.DEFI_FINISHED_TO_EXIT) {
