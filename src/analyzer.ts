@@ -21,8 +21,9 @@ const REGEX_DEFI_MENU_CONFLIT: RegExp = /(Conflit|frontalier)/;
 const REGEX_DEFI_POPUP: RegExp = /(du jour)/;
 const REGEX_DEFI_POPUP_WAIT: RegExp = /(Attendre des membres du groupe)/;
 const REGEX_DEFI_POPUP_TO_ACCEPT: RegExp = /(matériaux)[\S\s]*(récompenses)/;
-const REGEX_DEFI_STARTING: RegExp = /(07:|08:)/;
-const REGEX_DEFI_ENDING: RegExp = /(vain)[\S\s]*(dans)[\S\s]*(secondes)/;
+const REGEX_DEFI_STARTING: RegExp = /(07:|08:|01:)/;
+const REGEX_DEFI_ENDING: RegExp = /(Compte)[\S\s]*(dans)[\S\s]*(secondes)/;
+const REGEX_DEFI_CAN_EXIT: RegExp = /(Appuyer)[\S\s]*(importe)[\S\s]*(fermer)/;
 
 const REGEX_END_INSTANCE: RegExp = /(secondes|fermer)/;
 
@@ -89,14 +90,17 @@ export class Analyzer {
           .filter((w: tesseract.Word) => w.text.match(REGEX_DEFI_MENU_CONFLIT) ?? w.text.match(/(aller|12h00)/))
           .map((w: tesseract.Word) => ({ text: w.text, bbox: w.bbox }));
 
-        const x: number | undefined = matches
-          .filter((w: Word) => w.text.match(REGEX_DEFI_MENU_CONFLIT))
-          .at(0)?.bbox.x1;
-        const y: number | undefined = matches
-          .filter((w: Word) => w.text.match(/(aller|12h00)/))
-          .at(0)?.bbox.y1;
+        const matchConflitFrontalierTitle: Word[] = matches.filter((w: Word) => w.text.match(REGEX_DEFI_MENU_CONFLIT));
+        const x: number | undefined
+          = matchConflitFrontalierTitle.at(1)?.bbox.x0 ??matchConflitFrontalierTitle.at(0)?.bbox.x1;
 
-        if (x !== undefined && y !== undefined) {
+        const matchGoConflitFrontalierButtonPos: tesseract.Bbox = matches
+          .filter((w: Word) => w.text.match(/(aller|12h00)/))
+          .at(0)?.bbox ?? { x0: 0, y0: 0, x1: 0, y1: 0 };
+        const y: number = matchGoConflitFrontalierButtonPos.y0 +
+          (matchGoConflitFrontalierButtonPos.y1 - matchGoConflitFrontalierButtonPos.y0);
+
+        if (x !== undefined && y !== 0) {
           this.conflitGoLocation = [x, y];
         }
 
@@ -112,6 +116,10 @@ export class Analyzer {
 
     if (text.match(REGEX_DEFI_ENDING)) {
       return GAME_STATE.DEFI_FINISHED;
+    }
+
+    if (text.match(REGEX_DEFI_CAN_EXIT)) {
+      return GAME_STATE.DEFI_FINISHED_TO_EXIT;
     }
 
     if (text.match(REGEX_AVENTURE_MENU)) {

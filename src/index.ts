@@ -94,7 +94,7 @@ fs.readdirSync('./debug')
           await loop();
         })();
       },
-      game.state === GAME_STATE.DEFI_IN_PROGRESS ? 30_000 : 0,
+      game.state === GAME_STATE.DEFI_IN_PROGRESS ? 10_000 : 0,
     );
   }
 

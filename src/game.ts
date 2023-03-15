@@ -20,6 +20,7 @@ export enum GAME_STATE {
   DEFI_LOADING = 'DEFI_LOADING',
   DEFI_IN_PROGRESS = 'DEFI_IN_PROGRESS',
   DEFI_FINISHED = 'DEFI_FINISHED',
+  DEFI_FINISHED_TO_EXIT = 'DEFI_FINISHED_TO_EXIT',
 
   GROUP_TO_ACCEPT = 'GROUP_TO_ACCEPT',
 
@@ -44,6 +45,8 @@ interface ResolutionConfig {
   activity_defi_help: ResolutionConfigCoord;
   activity_defi_accept: ResolutionConfigCoord;
   conflit_auto: ResolutionConfigCoord;
+  conflit_exit: ResolutionConfigCoord;
+  conflit_confirm_exit: ResolutionConfigCoord;
 }
 
 async function sleep(time: number): Promise<void> {
@@ -73,7 +76,7 @@ export class Game {
     switch (this.state) {
       case GAME_STATE.IDLE:
         this.openAventureMenu();
-        await sleep(500);
+        await sleep(1000);
         this.switchToAventureDefiTab();
         this.state = GAME_STATE.DEFI_MENU_NO_CONFLIT;
         break;
@@ -84,7 +87,7 @@ export class Game {
       case GAME_STATE.DEFI_MENU_NO_CONFLIT:
         if (analyzerState === GAME_STATE.DEFI_MENU_CONFLIT) {
           this.prepareConflit(conflitGoLocation);
-          await sleep(500);
+          await sleep(1000);
           await this.launchConflit();
           this.state = GAME_STATE.DEFI_GROUPE_WAIT;
         } else {
@@ -94,13 +97,13 @@ export class Game {
         break;
       case GAME_STATE.DEFI_MENU_CONFLIT:
         this.prepareConflit(conflitGoLocation);
-        await sleep(500);
+        await sleep(1000);
         await this.launchConflit();
         this.state = GAME_STATE.DEFI_GROUPE_WAIT;
         break;
       case GAME_STATE.DEFI_GROUPE:
         await this.launchConflit();
-        await sleep(500);
+        await sleep(1000);
         this.state = GAME_STATE.DEFI_GROUPE_WAIT;
         break;
       case GAME_STATE.DEFI_GROUPE_WAIT:
@@ -140,9 +143,13 @@ export class Game {
         }
         break;
       case GAME_STATE.DEFI_FINISHED:
-        if (analyzerState === GAME_STATE.IDLE) {
-          this.state = GAME_STATE.IDLE;
+        if (analyzerState === GAME_STATE.DEFI_FINISHED_TO_EXIT) {
+          this.state = GAME_STATE.DEFI_FINISHED_TO_EXIT;
         }
+        break;
+      case GAME_STATE.DEFI_FINISHED_TO_EXIT:
+        await this.exitConflit();
+        this.state = GAME_STATE.IDLE;
         break;
       default:
         return;
@@ -191,7 +198,7 @@ export class Game {
 
   private prepareConflit(conflitGoLocation: [number, number]): void {
     console.log('action: prepareConflit');
-    robot.moveMouse(conflitGoLocation[0], conflitGoLocation[1]);
+    robot.moveMouse(conflitGoLocation[0], conflitGoLocation[1] + this.gameProcess.bounds.Top);
     robot.mouseClick();
   }
 
@@ -203,7 +210,7 @@ export class Game {
     );
     robot.mouseClick();
 
-    await sleep(500);
+    await sleep(1000);
 
     robot.moveMouse(
       this.resolutionConfig.activity_defi_group.x,
@@ -220,7 +227,7 @@ export class Game {
     );
     robot.mouseClick();
 
-    await sleep(500);
+    await sleep(1000);
 
     robot.moveMouse(
       this.resolutionConfig.activity_defi_accept.x,
@@ -236,6 +243,35 @@ export class Game {
       this.resolutionConfig.conflit_auto.x,
       this.resolutionConfig.conflit_auto.y,
     );
+    robot.mouseClick();
+    robot.keyToggle('alt', 'up');
+  }
+
+  private async exitConflit(): Promise<void> {
+    console.log('action: exitConflit');
+    robot.keyToggle('alt', 'down');
+
+    robot.moveMouse(
+      this.resolutionConfig.conflit_exit.x,
+      this.resolutionConfig.conflit_exit.y,
+    );
+    robot.mouseClick();
+
+    await sleep(1000);
+
+    robot.mouseClick();
+
+    await sleep(1000);
+
+    robot.mouseClick();
+
+    await sleep(1000);
+
+    robot.moveMouse(
+      this.resolutionConfig.conflit_confirm_exit.x,
+      this.resolutionConfig.conflit_confirm_exit.y,
+    );
+
     robot.mouseClick();
     robot.keyToggle('alt', 'up');
   }
