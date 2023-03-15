@@ -53,6 +53,28 @@ fs.readdirSync('./debug')
 
     console.log(`\n---> NEW PROCESS TICK (number: ${num}) <---`);
 
+    // const start: number = Date.now();
+
+    /* for (let i: number = 0; i < 25; i++) {
+         const screenshot: Buffer = await gameProcess.getScreenshot(
+           i,
+           {
+             Left: 250,
+             Right: 500,
+             Top: 650,
+             Bottom: 750,
+           },
+           false,
+           true,
+         );
+         await analyzer.analyze(i, screenshot);
+       } */
+
+    /* const end: number = Date.now();
+       console.log('time', end-start); */
+
+    // process.exit(0);
+
     const screenshot: Buffer = await gameProcess.getScreenshot(num);
     let state: GAME_STATE = await analyzer.analyze(num, screenshot);
 
