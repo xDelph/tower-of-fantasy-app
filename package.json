@@ -3,6 +3,7 @@
     "rebuild": "electron-rebuild",
     "pre:start": "tsc",
     "start": "nodemon",
+    "debug": "nodemon --config nodemon-debug.json",
     "lint": "eslint src",
     "lint:error": "eslint src --quiet",
     "lint:fix": "eslint src --fix"
