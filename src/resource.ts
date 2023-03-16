@@ -19,7 +19,7 @@ export class Resource {
     let png: PNGWithMetadata | undefined = this.cache[name];
 
     if (png === undefined) {
-      png = PNG.sync.read(fs.readFileSync(`./resources/${name}.png`));
+      png = PNG.sync.read(fs.readFileSync(`./resources/${name}.png`), { skipRescale: true });
     }
 
     this.cache[name] = png;
