@@ -22,6 +22,8 @@ export class Resource {
       png = PNG.sync.read(fs.readFileSync(`./resources/${name}.png`));
     }
 
+    this.cache[name] = png;
+
     return png;
   }
 
