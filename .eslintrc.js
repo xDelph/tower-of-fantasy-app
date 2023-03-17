@@ -128,19 +128,10 @@ module.exports = {
       { "blocks": "never" },
     ],
     "no-multi-spaces": "warn",
-    "comma-dangle": [
-      "warn",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "always-multiline"
-      },
-    ],
     "eol-last": ["warn", "always"],
     "no-trailing-spaces": "error",
     "space-in-parens": "warn",
+    'comma-dangle': 'off',
 
     // disabled rules after discussion
     "no-magic-numbers": "off",
@@ -151,6 +142,18 @@ module.exports = {
     "babel/semi": 1,
 
     // basic typescript rules
+    '@typescript-eslint/comma-dangle': [
+      'error', {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'always-multiline',
+        exports: 'always-multiline',
+        functions: 'always-multiline',
+        enums: 'always-multiline',
+        generics: 'always-multiline',
+        tuples: 'always-multiline',
+      }
+    ],
     "@typescript-eslint/typedef": [
       "error",
       {
