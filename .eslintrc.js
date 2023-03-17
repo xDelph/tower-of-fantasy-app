@@ -125,7 +125,7 @@ module.exports = {
     "no-multiple-empty-lines": ["warn", { max: 1 }],
     "padded-blocks": [
       "warn",
-      { "blocks": "never" },
+      "never"
     ],
     "no-multi-spaces": "warn",
     "eol-last": ["warn", "always"],
@@ -164,6 +164,9 @@ module.exports = {
         "variableDeclarationIgnoreFunction": true
       }
     ],
+    
+    "@typescript-eslint/prefer-enum-initializers": "off",
+    "@typescript-eslint/prefer-literal-enum-member": "error",
     "@typescript-eslint/prefer-readonly-parameter-types": "off",
     "@typescript-eslint/array-type": ["warn", { default: "array-simple" }],
     "@typescript-eslint/no-inferrable-types": "off",
