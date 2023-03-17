@@ -119,6 +119,7 @@ module.exports = {
       { "blankLine": "always", "prev": "*", "next": "return" },
     ],
     "object-curly-spacing": ["warn", "always"],
+    "comma-spacing": ["error", { "before": false, "after": true }],
     "array-bracket-spacing": ["warn", "never"],
     "computed-property-spacing": ["warn", "never"],
     "no-multiple-empty-lines": ["warn", { max: 1 }],
