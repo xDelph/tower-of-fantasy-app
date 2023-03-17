@@ -143,16 +143,8 @@ module.exports = {
 
     // basic typescript rules
     '@typescript-eslint/comma-dangle': [
-      'error', {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'always-multiline',
-        exports: 'always-multiline',
-        functions: 'always-multiline',
-        enums: 'always-multiline',
-        generics: 'always-multiline',
-        tuples: 'always-multiline',
-      }
+      'error',
+      'always-multiline',
     ],
     "@typescript-eslint/typedef": [
       "error",
