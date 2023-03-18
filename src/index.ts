@@ -3,22 +3,22 @@ import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { Analyzer } from './analyzer';
+import * as tesseract from 'tesseract.js';
+
+// import { Analyzer } from './analyzer';
 import { GAME_STATE } from './game';
 import { Game } from './game';
 import { GameProcess } from './gameProcess';
-import { Resource } from './resource';
+import { LootTracker } from './tasks/lootTracker/lootTracker';
 
 // import { Overlay } from './overlay';
-
+const lang: string = process.env.TESSERACT_LANGUAGE ?? 'fra';
 const gameProcess: GameProcess = new GameProcess();
-const resource: Resource = new Resource();
 
 const game: Game = new Game(gameProcess);
 // const overlay: Overlay = new Overlay();
 
-const analyzer: Analyzer = new Analyzer();
-
+// const analyzer: Analyzer = new Analyzer();
 let num: number = 0;
 
 // remove previous debug
@@ -27,7 +27,24 @@ fs.readdirSync('./debug')
   .map((f: string) => fs.unlinkSync(`./debug/${f}`));
 
 (async (): Promise<void> => {
-  await analyzer.init();
+  const worker: Tesseract.Worker = await tesseract.createWorker({
+    logger: (m: unknown) => {
+      if (process.env.OCR_LOG === 'true') {
+        console.log(m);
+      }
+    },
+  });
+
+  await worker.loadLanguage(lang);
+  await worker.initialize(lang);
+
+  await worker.setParameters({
+    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÈÉabcdefghijklmnopqrstuvwxyzàèé0123456789: ',
+  });
+
+  const lootTracker: LootTracker = new LootTracker(worker);
+
+  // await analyzer.init();
 
   async function loop(): Promise<void> {
     if (!gameProcess.isProcessInForeground()) {
@@ -76,37 +93,40 @@ fs.readdirSync('./debug')
     // process.exit(0);
 
     const screenshot: Buffer = await gameProcess.getScreenshot(num);
-    let state: GAME_STATE = await analyzer.analyze(num, screenshot);
+    // let state: GAME_STATE = await analyzer.analyze(num, screenshot);
+    // const state: GAME_STATE = await ltAnalyzer.analyze(num, screenshot);
 
-    if (state === GAME_STATE.UNKNOWN) {
-      const envSaveScreenshotBackup: string | undefined = process.env.SAVE_SCREEN_SHOT;
-      process.env.SAVE_SCREEN_SHOT = 'false';
+    await lootTracker.execute(num, screenshot);
 
-      const positions: Array<[number, number]> = resource.getSubImagePositions(
-        await gameProcess.getScreenshot(
-          num,
-          {
-            Left: Math.round((gameProcess.bounds.Right - gameProcess.bounds.Left) * 0.8),
-            Right: gameProcess.bounds.Right,
-            Top: gameProcess.bounds.Top,
-            Bottom: Math.round((gameProcess.bounds.Bottom - gameProcess.bounds.Top) * 0.5),
-          },
-          true,
-        ),
-        'quest_tab',
-        0.4,
-      );
-      process.env.SAVE_SCREEN_SHOT = envSaveScreenshotBackup;
+    // if (state === GAME_STATE.UNKNOWN) {
+    //   const envSaveScreenshotBackup: string | undefined = process.env.SAVE_SCREEN_SHOT;
+    //   process.env.SAVE_SCREEN_SHOT = 'false';
 
-      if (positions.length !== 0 && positions.length < 4) {
-        state = GAME_STATE.IDLE;
-      }
-    }
+    //   const positions: Array<[number, number]> = resource.getSubImagePositions(
+    //     await gameProcess.getScreenshot(
+    //       num,
+    //       {
+    //         Left: Math.round((gameProcess.bounds.Right - gameProcess.bounds.Left) * 0.8),
+    //         Right: gameProcess.bounds.Right,
+    //         Top: gameProcess.bounds.Top,
+    //         Bottom: Math.round((gameProcess.bounds.Bottom - gameProcess.bounds.Top) * 0.5),
+    //       },
+    //       true,
+    //     ),
+    //     'quest_tab',
+    //     0.4,
+    //   );
+    //   process.env.SAVE_SCREEN_SHOT = envSaveScreenshotBackup;
 
-    console.log('Analyzer state:', state);
-    console.log('Before Game state:', game.state);
-    await game.doConflit(state, analyzer.conflitGoLocation);
-    console.log('After Game state:', game.state);
+    //   if (positions.length !== 0 && positions.length < 4) {
+    //     state = GAME_STATE.IDLE;
+    //   }
+    // }
+
+    // console.log('Analyzer state:', state);
+    // console.log('Before Game state:', game.state);
+    // await game.doConflit(state, analyzer.conflitGoLocation);
+    // console.log('After Game state:', game.state);
 
     num += 1;
 

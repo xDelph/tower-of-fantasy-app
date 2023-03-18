@@ -51,43 +51,6 @@ export class GameProcess {
     console.log('Tower of Fantasy Bounds:', this.bounds);
   }
 
-  private async screenshot(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    grayscale: boolean,
-    swapRedAndBlueChannel: boolean,
-  ): Promise<Buffer> {
-    // console.log(x, y, width, height);
-    const bmp: robot.Bitmap = robot.screen.capture(x, y, width, height);
-
-    if (swapRedAndBlueChannel) {
-      this.swapRedAndBlueChannel(bmp);
-    }
-
-    const img: Buffer = await new Promise(
-      (resolve: (value: Buffer | PromiseLike<Buffer>) => void, reject: (reason?: unknown) => void) => {
-        const image: Jimp = new Jimp({ data: bmp.image as Buffer, width: bmp.width, height: bmp.height });
-
-        if (grayscale) {
-          image.grayscale();
-        }
-
-        image.getBuffer(Jimp.MIME_PNG, (err: Error | null, buffer: Buffer) => {
-          if (err !== null) {
-            reject(err);
-          }
-          else {
-            resolve(buffer);
-          }
-        });
-      },
-    );
-
-    return img;
-  }
-
   private swapRedAndBlueChannel(bmp: robot.Bitmap): void {
     for (let i: number = 0; i < (bmp.width * bmp.height) * 4; i += 4) { // swap red and blue channel
       const image: Buffer = bmp.image as Buffer;
@@ -100,19 +63,30 @@ export class GameProcess {
 
   async getScreenshot(
     num: number,
-    bounds?: Bounds,
-    grayscale: boolean = false,
-    swapRedAndBlueChannel: boolean = false,
   ): Promise<Buffer> {
-    const location: Bounds = bounds ?? this.bounds;
+    const bmp: robot.Bitmap = robot.screen.capture(
+      this.bounds.Left,
+      this.bounds.Top,
+      this.bounds.Right - this.bounds.Left,
+      this.bounds.Bottom - this.bounds.Top,
+    );
 
-    const img: Buffer = await this.screenshot(
-      location.Left,
-      location.Top,
-      location.Right - location.Left,
-      location.Bottom - location.Top,
-      grayscale,
-      swapRedAndBlueChannel,
+    const img: Buffer = await new Promise(
+      (resolve: (value: Buffer | PromiseLike<Buffer>) => void, reject: (reason?: unknown) => void) => {
+        const image: Jimp = new Jimp({ data: bmp.image as Buffer, width: bmp.width, height: bmp.height });
+        // if (grayscale) {
+        //   image.grayscale();
+        // }
+
+        image.getBuffer(Jimp.MIME_PNG, (err: Error | null, buffer: Buffer) => {
+          if (err !== null) {
+            reject(err);
+          }
+          else {
+            resolve(buffer);
+          }
+        });
+      },
     );
 
     if (process.env.SAVE_SCREEN_SHOT === 'true') {
@@ -121,6 +95,30 @@ export class GameProcess {
 
     return img;
   }
+
+  // async getScreenshot(
+  //   num: number,
+  //   bounds?: Bounds,
+  //   grayscale: boolean = false,
+  //   swapRedAndBlueChannel: boolean = false,
+  // ): Promise<Buffer> {
+  //   const location: Bounds = bounds ?? this.bounds;
+
+  //   const img: Buffer = await this.screenshot(
+  //     location.Left,
+  //     location.Top,
+  //     location.Right - location.Left,
+  //     location.Bottom - location.Top,
+  //     grayscale,
+  //     swapRedAndBlueChannel,
+  //   );
+
+  //   if (process.env.SAVE_SCREEN_SHOT === 'true') {
+  //     fs.writeFileSync(`./debug/screenshot${num}.png`, Buffer.from(img));
+  //   }
+
+  //   return img;
+  // }
 
   isProcessInForeground(): boolean {
     const forgroundWindow: childProcess.SpawnSyncReturns<Buffer>
