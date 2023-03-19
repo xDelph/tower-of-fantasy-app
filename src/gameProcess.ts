@@ -49,6 +49,12 @@ export class GameProcess {
     this.bounds = JSON.parse(windows.stdout.toString()) as Bounds;
 
     console.log('Tower of Fantasy Bounds:', this.bounds);
+    global.setGameRegion({
+      x: this.bounds.Left,
+      y: this.bounds.Top,
+      width: this.bounds.Right,
+      height: this.bounds.Bottom,
+    });
   }
 
   private async screenshot(

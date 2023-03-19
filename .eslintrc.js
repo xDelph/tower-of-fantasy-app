@@ -131,7 +131,10 @@ module.exports = {
     "eol-last": ["warn", "always"],
     "no-trailing-spaces": "error",
     "space-in-parens": "warn",
-    'comma-dangle': 'off',
+    'comma-dangle': [
+      'error',
+      'always-multiline',
+    ],
 
     // disabled rules after discussion
     "no-magic-numbers": "off",
@@ -142,10 +145,6 @@ module.exports = {
     "babel/semi": 1,
 
     // basic typescript rules
-    '@typescript-eslint/comma-dangle': [
-      'error',
-      'always-multiline',
-    ],
     "@typescript-eslint/typedef": [
       "error",
       {

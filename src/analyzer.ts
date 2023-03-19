@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 
-import * as tesseract from 'tesseract.js';
+import type * as tesseract from 'tesseract.js';
 
 import { GAME_STATE } from './game';
 
@@ -34,36 +34,10 @@ interface Word {
 }
 
 export class Analyzer {
-  private worker!: tesseract.Worker;
-  private readonly lang: string;
-
   conflitGoLocation: [number, number] = [-1, -1];
 
-  constructor(
-    // private readonly overlay: Overlay,
-  ) {
-    this.lang = process.env.TESSERACT_LANGUAGE ?? 'fra';
-  }
-
-  async init(): Promise<void> {
-    this.worker = await tesseract.createWorker({
-      logger: (m: unknown) => {
-        if (process.env.OCR_LOG === 'true') {
-          console.log(m);
-        }
-      },
-    });
-
-    await this.worker.loadLanguage(this.lang);
-    await this.worker.initialize(this.lang);
-
-    await this.worker.setParameters({
-      tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÈÉabcdefghijklmnopqrstuvwxyzàèé0123456789: ',
-    });
-  }
-
   async analyze(num: number, screenshot: Buffer): Promise<GAME_STATE> {
-    const { data: { text, words } } = await this.worker.recognize(screenshot);
+    const { data: { text, words } } = await global.worker.recognize(screenshot);
 
     if (text.match(VISUAL_STUDIO)) {
       // TOF not anymore in front
@@ -108,6 +82,7 @@ export class Analyzer {
 
         if (x !== undefined && y !== 0) {
           this.conflitGoLocation = [x, y];
+          console.log(this.conflitGoLocation);
         }
 
         return GAME_STATE.DEFI_MENU_CONFLIT;
