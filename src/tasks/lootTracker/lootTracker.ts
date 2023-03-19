@@ -1,3 +1,4 @@
+import type { Loot } from './analyzer';
 import type { LootTrackerState } from './state';
 import type Tesseract from 'tesseract.js';
 
@@ -20,51 +21,53 @@ export class LootTracker {
   }
 
   async execute(num: number, screenhot: Buffer): Promise<void> {
-    console.debug('Current state: ', this.state);
-    if(this.state.lastChestOpenedDate > 0) {
-      if(new Date().getTime() - this.state.lastChestOpenedDate < LOOT_TIMER) {
-        // TODO: check loot
+    const loot: Loot | null = await this.analyzer.getLoot(num, screenhot);
 
-        // We return so we don't check anything else until the loot timer ran out
-        return;
-      }
-      this.state.lastChestOpenedDate = 0;
-    }
+    console.log(loot);
+    // console.debug('Current state: ', this.state);
+    // if(this.state.lastChestOpenedDate > 0) {
+    //   if(new Date().getTime() - this.state.lastChestOpenedDate < LOOT_TIMER) {
+    //     // TODO: check loot
 
-    if(this.state.gameState == GAME_STATE.UNKNOWN || this.state.gameState == GAME_STATE.IDLE) {
-      const result: {
-          state: GAME_STATE;
-          jointOperationName: string;
-      } | null = await this.analyzer.getJointOperationState(num, screenhot);
-      if(result) {
-        this.state.gameState = result.state;
-        this.state.jointOperationName = result.jointOperationName;
-      }
-    }
+    //     // We return so we don't check anything else until the loot timer ran out
+    //     return;
+    //   }
+    //   this.state.lastChestOpenedDate = 0;
+    // }
 
-    if(await this.analyzer.isIdle(num, screenhot)) {
-      this.state.gameState = GAME_STATE.IDLE;
-      this.state.jointOperationName = '';
-      this.state.lastChestOpenedDate = 0;
-      this.state.openedChests = [false,false,false,false];
+    // if(this.state.gameState == GAME_STATE.UNKNOWN || this.state.gameState == GAME_STATE.IDLE) {
+    //   const result: {
+    //       state: GAME_STATE;
+    //       jointOperationName: string;
+    //   } | null = await this.analyzer.getJointOperationState(num, screenhot);
+    //   if(result) {
+    //     this.state.gameState = result.state;
+    //     this.state.jointOperationName = result.jointOperationName;
+    //   }
+    // }
 
-      return;
-    }
+    // if(await this.analyzer.isIdle(num, screenhot)) {
+    //   this.state.gameState = GAME_STATE.IDLE;
+    //   this.state.jointOperationName = '';
+    //   this.state.lastChestOpenedDate = 0;
+    //   this.state.openedChests = [false,false,false,false];
 
-    const openedChests: number[] = await this.analyzer.getOpenedChests(num, screenhot);
-    console.debug('opened chests:', openedChests);
-    openedChests.forEach((p: number)=> {
-      if(!this.state.openedChests[p])
-      {
-        this.state.openedChests[p] = true;
-        // We don't care what we loot in the 4th chest
-        if(p != 3) {
-          this.state.lastChestOpenedDate = new Date().getTime();
-        }
-      }
-    });
+    //   return;
+    // }
 
-    console.debug('New state: ', this.state);
+    // const openedChests: number[] = await this.analyzer.getOpenedChests(num, screenhot);
+    // openedChests.forEach((p: number)=> {
+    //   if(!this.state.openedChests[p])
+    //   {
+    //     this.state.openedChests[p] = true;
+    //     // We don't care what we loot in the 4th chest
+    //     if(p != 3) {
+    //       this.state.lastChestOpenedDate = new Date().getTime();
+    //     }
+    //   }
+    // });
+
+    // console.debug('New state: ', this.state);
   }
 
 }

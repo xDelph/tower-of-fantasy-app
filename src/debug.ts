@@ -20,9 +20,8 @@ import { Analyzer } from './tasks/lootTracker/analyzer';
     tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZÀÈÉabcdefghijklmnopqrstuvwxyzàèé0123456789: ',
   });
 
-  const screenshot: Buffer = fs.readFileSync('./debug/screenshot17.png');
+  const screenshot: Buffer = fs.readFileSync('./debug/screenshot11.png');
   const analyzer: Analyzer = new Analyzer(worker);
-
   const result: number[] = await analyzer.getOpenedChests(1, screenshot);
 
   console.log(result);

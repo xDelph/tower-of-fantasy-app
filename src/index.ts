@@ -47,27 +47,26 @@ fs.readdirSync('./debug')
   // await analyzer.init();
 
   async function loop(): Promise<void> {
-    if (!gameProcess.isProcessInForeground()) {
-      if (process.env.FOREGROUND_WARN === 'true') {
-        console.log('-----------------------------------');
-        console.log('[Warn] Tower of Fantasy is not the forground window !');
-        console.log('[Warn] Please switch to Tower of Fantasy window !');
-        console.log('[Warn] Waiting for 5 seconds before retrying...');
-        console.log('-----------------------------------');
-      }
+    // if (!gameProcess.isProcessInForeground()) {
+    //   if (process.env.FOREGROUND_WARN === 'true') {
+    //     console.log('-----------------------------------');
+    //     console.log('[Warn] Tower of Fantasy is not the forground window !');
+    //     console.log('[Warn] Please switch to Tower of Fantasy window !');
+    //     console.log('[Warn] Waiting for 5 seconds before retrying...');
+    //     console.log('-----------------------------------');
+    //   }
 
-      setTimeout(
-        () => {
-          void (async (): Promise<void> => {
-            await loop();
-          })();
-        },
-        5_000,
-      );
+    //   setTimeout(
+    //     () => {
+    //       void (async (): Promise<void> => {
+    //         await loop();
+    //       })();
+    //     },
+    //     5_000,
+    //   );
 
-      return;
-    }
-
+    //   return;
+    // }
     console.log(`\n---> NEW PROCESS TICK (number: ${num}) <---`);
 
     // const start: number = Date.now();
@@ -91,12 +90,18 @@ fs.readdirSync('./debug')
     // console.log('time', end-start);
 
     // process.exit(0);
-
+    let start: number = Date.now();
     const screenshot: Buffer = await gameProcess.getScreenshot(num);
+    let end: number = Date.now();
+    console.log(`gameProcess.getScreenshot() Execution time: ${end - start} ms`);
+
     // let state: GAME_STATE = await analyzer.analyze(num, screenshot);
     // const state: GAME_STATE = await ltAnalyzer.analyze(num, screenshot);
 
+    start = Date.now();
     await lootTracker.execute(num, screenshot);
+    end = Date.now();
+    console.log(`lootTracker.execute() Execution time: ${end - start} ms`);
 
     // if (state === GAME_STATE.UNKNOWN) {
     //   const envSaveScreenshotBackup: string | undefined = process.env.SAVE_SCREEN_SHOT;
@@ -134,13 +139,15 @@ fs.readdirSync('./debug')
       num = 0;
     }
 
-    setTimeout(
+    setImmediate(
       () => {
         void (async (): Promise<void> => {
+          start = Date.now();
           await loop();
+          end = Date.now();
+          console.log(`Loop Execution time: ${end - start} ms`);
         })();
       },
-      game.state === GAME_STATE.DEFI_IN_PROGRESS ? 10_000 : 1_000,
     );
   }
 

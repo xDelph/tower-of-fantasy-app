@@ -34,6 +34,17 @@ export enum GAME_STATE {
   VISUAL_STUDIO = 'VISUAL_STUDIO',
 }
 
+export enum LOOT_TYPE {
+  MATRIX = 'MATRIX',
+  GEAR = 'GEAR',
+  OTHER = 'OTHER'
+}
+
+export enum LOOT_RARITY {
+  SR = 'SR',
+  SSR = 'SSR'
+}
+
 interface ResolutionConfigCoord {
   x: number;
   y: number;
