@@ -17,8 +17,9 @@ export class GameProcess {
   bounds!: Bounds;
 
   constructor() {
-    this.getPid();
-    this.getBounds();
+    // this.getPid();
+    // this.getBounds();
+    this.bounds = { Left: 0, Top: 0, Right: 2560, Bottom: 1440 };
   }
 
   private getPid(): void {

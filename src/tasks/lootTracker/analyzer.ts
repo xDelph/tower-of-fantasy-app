@@ -95,7 +95,7 @@ export class Analyzer {
   }
 
   async getLoot(num: number, screenshot: Buffer) : Promise<Loot|null> {
-    const rarityBuffer: Buffer = await this.crop(num, 'lootRarity', false, screenshot, 248,638,100,11);
+    const rarityBuffer: Buffer = await this.crop(num, 'lootRarity', false, screenshot, 224,624,150,50);
     const srLoot: Array<[number, number]> = resource.getSubImagePositions(rarityBuffer, 'sr_loot');
     const ssrLoot: Array<[number, number]> = resource.getSubImagePositions(rarityBuffer, 'ssr_loot');
 
