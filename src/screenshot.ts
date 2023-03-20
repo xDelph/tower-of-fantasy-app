@@ -3,32 +3,37 @@ import * as fs from 'fs';
 import type { Region } from './shared/types';
 
 import Jimp from 'jimp';
-import robot from 'robotjs';
+import { captureActiveWindowSync } from 'windows-ss';
 
 export class Screenshot {
-  private readonly image: robot.Bitmap;
+  private readonly buffer: Buffer;
 
   constructor() {
     const gameRegion: Region = global.getGameRegion();
 
-    this.image = robot.screen.capture(
-      gameRegion.x,
-      gameRegion.y,
-      gameRegion.width,
-      gameRegion.height,
-    );
+    const buffer: Buffer | null = captureActiveWindowSync({
+      bounds: {
+        left: gameRegion.x,
+        top: gameRegion.y,
+        right: gameRegion.width,
+        bottom: gameRegion.height,
+      },
+      format: 'jpeg',
+    });
+
+    if (buffer !== null) {
+      this.buffer = buffer;
+    } else {
+      throw new Error('Problem screenshoting !!');
+    }
   }
 
   async getData(
-    mime: string = Jimp.MIME_PNG,
+    mime: string = Jimp.MIME_JPEG,
     region?: Region,
     grayscale: boolean = false,
   ): Promise<Buffer> {
-    const jimp: Jimp = new Jimp({
-      data: this.image.image as Buffer,
-      width: this.image.width,
-      height: this.image.height,
-    });
+    const jimp: Jimp = await Jimp.read(this.buffer);
 
     if (region !== undefined) {
       jimp.crop(region.x, region.y, region.width, region.height);

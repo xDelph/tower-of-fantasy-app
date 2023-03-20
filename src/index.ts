@@ -14,7 +14,7 @@ const conflitFrontalier: ConflitFrontalierAction = new ConflitFrontalierAction()
 
 // remove previous debug
 fs.readdirSync('./debug')
-  .filter((f: string) => /[0-9]\.(png|txt)$/.test(f))
+  .filter((f: string) => /[0-9]\.(jpeg|txt)$/.test(f))
   .map((f: string) => fs.unlinkSync(`./debug/${f}`));
 
 (async (): Promise<void> => {
@@ -49,28 +49,6 @@ fs.readdirSync('./debug')
     if (global.iterationNumber === 25) {
       global.iterationNumber = 0;
     }
-
-    // const start: number = Date.now();
-
-    // for (let i: number = 0; i < 25; i++) {
-    //   const screenshot: Buffer = await gameProcess.getScreenshot(
-    //     i,
-    //     {
-    //       Left: 250,
-    //       Right: 500,
-    //       Top: 650,
-    //       Bottom: 750,
-    //     },
-    //     false,
-    //     true,
-    //   );
-    //   await analyzer.analyze(i, screenshot);
-    // }
-
-    // const end: number = Date.now();
-    // console.log('time', end-start);
-
-    // process.exit(0);
 
     setTimeout(
       () => {
