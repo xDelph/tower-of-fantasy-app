@@ -6,7 +6,7 @@ dotenv.config();
 import { captureActiveWindow } from 'windows-ss';
 
 import { Analyzer } from './analyzer';
-import { TesseractWorker } from './worker';
+import { TesseractWorker } from './tools/worker';
 
 (async (): Promise<void> => {
   global.worker = await TesseractWorker.getWorker();

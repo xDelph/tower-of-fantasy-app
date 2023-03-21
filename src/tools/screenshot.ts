@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import type { Region } from './shared/types';
+import type { Region } from '../shared/types';
 
 import Jimp from 'jimp';
 import { captureActiveWindowSync } from 'windows-ss';

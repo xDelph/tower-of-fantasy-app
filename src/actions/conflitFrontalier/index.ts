@@ -1,5 +1,5 @@
-import { Screenshot } from '../../screenshot';
 import sleep from '../../shared/sleep';
+import { Screenshot } from '../../tools/screenshot';
 
 import { ConflitFrontalierAnalyzer } from './analyzer';
 import { ConflitFrontalierBot } from './bot';
@@ -111,6 +111,7 @@ export class ConflitFrontalierAction {
         break;
       case ConflitFrontalierState.CONFLIT_INSTANCE_EXIT:
         await this.bot.exitConflit();
+        this.state = ConflitFrontalierState.CONFLIT_INSTANCE_EXITED;
         setTimeout(() => this.state = ConflitFrontalierState.UNKNOWN, 15_000);
         break;
       default:

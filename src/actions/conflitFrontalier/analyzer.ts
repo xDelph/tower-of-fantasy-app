@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
-import type { Screenshot } from '../../screenshot';
 import type { Position } from '../../shared/types';
+import type { Screenshot } from '../../tools/screenshot';
 import type { Bbox, Word } from 'tesseract.js';
 
 import { sortBy } from 'lodash';

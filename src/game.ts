@@ -1,4 +1,4 @@
-import type { GameProcess } from './gameProcess';
+import type { GameProcess } from './tools/gameProcess';
 
 import * as resolutions from './config/resolutions.json';
 
