@@ -10,6 +10,8 @@
   "eslint.codeActionsOnSave.mode": "problems",
   "eslint.lintTask.enable": true,
 
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
   "editor.rulers": [120],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true

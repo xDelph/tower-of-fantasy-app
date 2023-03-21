@@ -4,7 +4,7 @@ import type { PNGWithMetadata } from 'pngjs';
 
 import { PNG } from 'pngjs';
 
-import { subImageMatch } from './lib/subImageMatcher';
+import { subImageMatch } from '../lib/subImageMatcher';
 
 export class Resource {
   private readonly cache: Record<string, PNGWithMetadata | undefined>;
