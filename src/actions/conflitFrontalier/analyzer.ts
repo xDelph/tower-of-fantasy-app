@@ -84,7 +84,7 @@ export class ConflitFrontalierAnalyzer {
       {
         name: 'conflit_exit',
         order: 1,
-        regex: /(Appuyer)[\S\s]*(importe)[\S\s]*(fermer)/,
+        regex: /(Appuyer)[\S\s]*(importe)[\S\s]*(pour)/,
         state: ConflitFrontalierState.CONFLIT_INSTANCE_EXIT,
       },
     ],
