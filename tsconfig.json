@@ -4,9 +4,10 @@
     "files": true
   },
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "lib": ["ES5"],
-    "module": "CommonJS",
+    "lib": ["es6"],
+    "module": "esnext",
     "moduleResolution": "Node",
     "outDir": "./dist",
     "resolveJsonModule": true,
@@ -14,12 +15,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES5",
+    "target": "esnext",
     "types": ["node"],
     "typeRoots": ["node_modules/@types", "src/@types/global.d.ts"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "./build/**/*", "tmp", "dist", "scripts", "debug", "resources"]
+  "exclude": ["node_modules", "./build/**/*", "tmp", "dist", "scripts", "debug", "resources", "././eslintrc.js"]
 }
 
 

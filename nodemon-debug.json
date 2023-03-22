@@ -2,5 +2,5 @@
   "watch": ["./src", "./resources"],
   "ext": ".ts,.js,.json,.png",
   "ignore": [],
-  "exec": "npx ts-node ./src/debug.ts"
+  "exec": "npx ts-node-esm ./src/debug.ts"
 }

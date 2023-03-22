@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 
-import type { Position } from '../../shared/types';
-import type { Screenshot } from '../../tools/screenshot';
+import type { Position } from '../../shared/types.js';
+import type { Screenshot } from '../../tools/screenshot.js';
 import type { Bbox, Word } from 'tesseract.js';
 
 import { sortBy } from 'lodash';
 
-import { ConflitFrontalierState } from './types';
+import { ConflitFrontalierState } from './types.js';
 
 interface Matcher {
   name: string;
