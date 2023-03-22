@@ -1,9 +1,9 @@
-import sleep from '../../shared/sleep';
-import { Screenshot } from '../../tools/screenshot';
+import sleep from '../../shared/sleep.js';
+import { Screenshot } from '../../tools/screenshot.js';
 
-import { ConflitFrontalierAnalyzer } from './analyzer';
-import { ConflitFrontalierBot } from './bot';
-import { ConflitFrontalierState } from './types';
+import { ConflitFrontalierAnalyzer } from './analyzer.js';
+import { ConflitFrontalierBot } from './bot.js';
+import { ConflitFrontalierState } from './types.js';
 
 export class ConflitFrontalierAction {
   private readonly analyzer: ConflitFrontalierAnalyzer = new ConflitFrontalierAnalyzer();

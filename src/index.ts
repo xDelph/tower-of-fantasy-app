@@ -6,8 +6,8 @@ dotenv.config();
 import './global';
 
 import { ConflitFrontalierAction } from './actions/conflitFrontalier';
-import { GameProcess } from './tools/gameProcess';
-import { TesseractWorker } from './tools/worker';
+import { GameProcess } from './tools/gameProcess.js';
+import { TesseractWorker } from './tools/worker.js';
 
 const gameProcess: GameProcess = new GameProcess();
 const conflitFrontalier: ConflitFrontalierAction = new ConflitFrontalierAction();

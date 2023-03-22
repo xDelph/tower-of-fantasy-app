@@ -1,8 +1,8 @@
-import type { Position } from '../../shared/types';
+import type { Position } from '../../shared/types.js';
 
 import robot from 'robotjs';
 
-import sleep from '../../shared/sleep';
+import sleep from '../../shared/sleep.js';
 
 export class ConflitFrontalierBot {
   openAventureMenu(): void {

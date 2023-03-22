@@ -1,6 +1,6 @@
 import type { GameProcess } from './tools/gameProcess';
 
-import * as resolutions from './config/resolutions.json';
+import * as resolutions from './config/resolutions.json' assert { type: 'json' };;
 
 export enum GAME_STATE {
   IDLE = 'IDLE',

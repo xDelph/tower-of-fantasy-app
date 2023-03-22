@@ -23,6 +23,8 @@
   "typescript.referencesCodeLens.enabled": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifierEnding": "js",
 
+  "javascript.preferences.importModuleSpecifierEnding": "js",
   "javascript.preferences.quoteStyle": "single",
 }

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import { GAME_STATE } from './game';
+import { GAME_STATE } from './game.js';
 
 const VISUAL_STUDIO: RegExp = /(Visual Studio)/;
 

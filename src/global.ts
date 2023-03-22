@@ -1,6 +1,6 @@
-import type { Position, Region, ResolutionConfig } from './shared/types';
+import type { Position, Region, ResolutionConfig } from './shared/types.js';
 
-import * as resolutions from './config/resolutions.json';
+import * as resolutions from './config/resolutions.json' assert { type: 'json' };;
 
 global.iterationNumber = 0;
 
