@@ -1,5 +1,7 @@
 import type { Position, Region, ResolutionConfig } from './shared/types';
 
+import { Point } from '@nut-tree/nut-js';
+
 import * as resolutions from './config/resolutions.json';
 
 global.iterationNumber = 0;
@@ -33,10 +35,10 @@ global.getGameRegion = (): Region => {
   return global.gameRegion;
 };
 
-global.gamePositionToScreenPosition = (position: Position): [number, number] => {
-  return [
+global.gamePositionToScreenPosition = (position: Position): Point => {
+  return new Point(
     position.x + (global.gameRegion?.x ?? 0),
     position.y + (global.gameRegion?.y ?? 0),
-  ];
+  );
 };
 

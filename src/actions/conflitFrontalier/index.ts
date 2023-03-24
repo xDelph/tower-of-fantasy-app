@@ -12,9 +12,9 @@ export class ConflitFrontalierAction {
   private state: ConflitFrontalierState = ConflitFrontalierState.UNKNOWN;
 
   private async start(): Promise<void> {
-    this.bot.openAventureMenu();
+    await this.bot.openAventureMenu();
     await sleep(1000);
-    this.bot.switchToAventureDefiTab();
+    await this.bot.switchToAventureDefiTab();
 
     this.state = ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITHOUT_CONFLIT_OPTION;
   }
@@ -33,23 +33,23 @@ export class ConflitFrontalierAction {
 
     switch (this.state) {
       case ConflitFrontalierState.AVENTURE_MENU:
-        this.bot.switchToAventureDefiTab();
+        await this.bot.switchToAventureDefiTab();
         this.state = ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITHOUT_CONFLIT_OPTION;
         break;
       case ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITHOUT_CONFLIT_OPTION:
         if (newState === ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITH_CONFLIT_OPTION) {
-          this.bot.prepareConflit(this.analyzer.positionToOpenPopup);
+          await this.bot.prepareConflit(this.analyzer.positionToOpenPopup);
           await sleep(1000);
           await this.bot.launchConflit();
           this.state = ConflitFrontalierState.CONFLIT_POPUP_MATCHMAKING;
           break;
         }
 
-        this.bot.dragDefiCarrousel();
+        await this.bot.dragDefiCarrousel();
         this.state = ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITH_CONFLIT_OPTION;
         break;
       case ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITH_CONFLIT_OPTION:
-        this.bot.prepareConflit(this.analyzer.positionToOpenPopup);
+        await this.bot.prepareConflit(this.analyzer.positionToOpenPopup);
         await sleep(1000);
         await this.bot.launchConflit();
         this.state = ConflitFrontalierState.CONFLIT_POPUP_MATCHMAKING;
@@ -84,13 +84,13 @@ export class ConflitFrontalierAction {
         }
 
         if (newState === ConflitFrontalierState.CONFLIT_INSTANCE_IN_PROGRESS) {
-          this.bot.activateAutoMode();
+          await this.bot.activateAutoMode();
           this.state = ConflitFrontalierState.CONFLIT_INSTANCE_IN_PROGRESS;
         }
         break;
       case ConflitFrontalierState.CONFLIT_LOADING_SCREEN:
         if (newState === ConflitFrontalierState.CONFLIT_INSTANCE_IN_PROGRESS) {
-          this.bot.activateAutoMode();
+          await this.bot.activateAutoMode();
           this.state = ConflitFrontalierState.CONFLIT_INSTANCE_IN_PROGRESS;
         }
         break;
