@@ -1,0 +1,6 @@
+{
+  "watch": ["./backend", "./resources"],
+  "ext": ".ts,.js,.json,.png",
+  "ignore": [],
+  "exec": "npx ts-node ./backend/debugThomas.ts"
+}

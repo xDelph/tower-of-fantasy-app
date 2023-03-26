@@ -1,4 +1,5 @@
 import type { Position, Region, ResolutionConfig } from '../shared/types';
+import type { Websocket } from '../tools/websocket';
 import type { Point } from '@nut-tree/nut-js';
 import type * as tesseract from 'tesseract.js';
 
@@ -9,6 +10,7 @@ declare global {
   var worker: tesseract.Worker;
   var resolutionConfig: ResolutionConfig;
   var gameRegion: Region | undefined;
+  var websocket: Websocket;
 
   function setGameRegion(region: Region): void;
   function getGameRegion(): Region;

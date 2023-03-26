@@ -8,17 +8,17 @@
     "lib": ["ES5"],
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "outDir": "./dist",
+    "outDir": "./distBackend",
     "resolveJsonModule": true,
-    "rootDir": "src",
+    "rootDir": "backend",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "ES5",
     "types": ["node"],
-    "typeRoots": ["node_modules/@types", "src/@types/global.d.ts"]
+    "typeRoots": ["node_modules/@types", "backend/@types/global.d.ts"]
   },
-  "include": ["src/**/*"],
+  "include": ["backend/**/*", "frontend/**/*"],
   "exclude": ["node_modules", "./build/**/*", "tmp", "dist", "scripts", "debug", "resources"]
 }
 

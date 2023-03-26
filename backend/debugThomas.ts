@@ -1,16 +1,18 @@
 import * as fs from 'fs';
 
 import * as dotenv from 'dotenv';
+import { captureActiveWindow } from 'windows-ss';
 dotenv.config();
 
-import { captureActiveWindow } from 'windows-ss';
+import './global';
 
-import { Analyzer } from './analyzer';
+// import { Analyzer } from './analyzer';
 import { TesseractWorker } from './tools/worker';
 
 (async (): Promise<void> => {
   global.worker = await TesseractWorker.getWorker();
-  const analyze: Analyzer = new Analyzer();
+  // const analyze: Analyzer = new Analyzer();
+
   let start: number = Date.now();
   const buffer: Buffer | null = await captureActiveWindow({
     bounds: {

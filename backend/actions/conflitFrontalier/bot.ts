@@ -61,8 +61,10 @@ export class ConflitFrontalierBot {
 
   async activateAutoMode(): Promise<void> {
     await keyboard.pressKey(Key.LeftAlt);
+
     await mouse.move(straightTo(global.gamePositionToScreenPosition(global.resolutionConfig.conflit_auto)));
     await mouse.click(Button.LEFT);
+
     await keyboard.releaseKey(Key.LeftAlt);
   }
 

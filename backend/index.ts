@@ -21,33 +21,37 @@ fs.readdirSync('./debug')
   global.worker = await TesseractWorker.getWorker();
 
   async function loop(): Promise<void> {
-    if (!gameProcess.isProcessInForeground()) {
-      if (process.env.FOREGROUND_WARN === 'true') {
-        console.log('-----------------------------------');
-        console.log('[Warn] Tower of Fantasy is not the forground window !');
-        console.log('[Warn] Please switch to Tower of Fantasy window !');
-        console.log('[Warn] Waiting for 5 seconds before retrying...');
-        console.log('-----------------------------------');
+    try {
+      if (!gameProcess.isProcessInForeground()) {
+        if (process.env.FOREGROUND_WARN === 'true') {
+          console.log('-----------------------------------');
+          console.log('[Warn] Tower of Fantasy is not the forground window !');
+          console.log('[Warn] Please switch to Tower of Fantasy window !');
+          console.log('[Warn] Waiting for 5 seconds before retrying...');
+          console.log('-----------------------------------');
+        }
+
+        setTimeout(
+          () => {
+            void (async (): Promise<void> => {
+              await loop();
+            })();
+          },
+          5_000,
+        );
+
+        return;
       }
 
-      setTimeout(
-        () => {
-          void (async (): Promise<void> => {
-            await loop();
-          })();
-        },
-        5_000,
-      );
+      console.log(`\n---> NEW PROCESS TICK (number: ${global.iterationNumber}) <---`);
+      await conflitFrontalier.nextTick();
 
-      return;
-    }
-
-    console.log(`\n---> NEW PROCESS TICK (number: ${global.iterationNumber}) <---`);
-    await conflitFrontalier.nextTick();
-
-    global.iterationNumber++;
-    if (global.iterationNumber === 25) {
-      global.iterationNumber = 0;
+      global.iterationNumber++;
+      if (global.iterationNumber === 25) {
+        global.iterationNumber = 0;
+      }
+    } catch (e) {
+      console.error('Loop error:', e);
     }
 
     setTimeout(

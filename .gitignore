@@ -81,7 +81,7 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+distBackend
 
 # Gatsby files
 .cache/
@@ -103,3 +103,23 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+
+
+# ----------------------- NEUTRALINOJS ---------------------------
+
+# Developer tools' files
+.lite_workspace.lua
+
+# Neutralinojs binaries and builds
+/bin
+/dist
+/.tmp
+
+# Neutralinojs client (minified)
+neutralino.js
+
+# Neutralinojs related files
+.storage
+*.log
