@@ -11,6 +11,8 @@ export class ConflitFrontalierAction {
 
   private state: ConflitFrontalierState = ConflitFrontalierState.UNKNOWN;
 
+  loopDone: number = 0;
+
   private updateState(analyzerState: ConflitFrontalierState, newState: ConflitFrontalierState): void {
     this.state = newState;
 
@@ -125,6 +127,7 @@ export class ConflitFrontalierAction {
       case ConflitFrontalierState.CONFLIT_INSTANCE_EXIT:
         await this.bot.exitConflit();
         this.updateState(analyzerState, ConflitFrontalierState.CONFLIT_INSTANCE_EXITED);
+        this.loopDone++;
         setTimeout(() => this.updateState(analyzerState, ConflitFrontalierState.UNKNOWN), 15_000);
         break;
       default:

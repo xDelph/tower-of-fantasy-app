@@ -45,6 +45,7 @@ fs.readdirSync('./debug')
 
       console.log(`\n---> NEW PROCESS TICK (number: ${global.iterationNumber}) <---`);
       await conflitFrontalier.nextTick();
+      console.log('Loop done:', conflitFrontalier.loopDone);
 
       global.iterationNumber++;
       if (global.iterationNumber === 25) {
