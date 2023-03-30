@@ -13,8 +13,7 @@ export interface Region {
 export interface ResolutionConfig {
   activity_button: Position;
   activity_defi_tab: Position;
-  activity_defi_caroussel_start: Position;
-  activity_defi_caroussel_stop: Position;
+  activity_defi_conflit: Position;
   activity_defi_go: Position;
   activity_defi_group: Position;
   activity_defi_help: Position;

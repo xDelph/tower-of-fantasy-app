@@ -1,5 +1,3 @@
-import type { Position } from '../../shared/types';
-
 import { Button, Key, keyboard, mouse, straightTo } from '@nut-tree/nut-js';
 
 import sleep from '../../shared/sleep';
@@ -24,18 +22,8 @@ export class ConflitFrontalierBot {
     await mouse.click(Button.LEFT);
   }
 
-  async dragDefiCarrousel(): Promise<void> {
-    await mouse.move(
-      straightTo(global.gamePositionToScreenPosition(global.resolutionConfig.activity_defi_caroussel_start)),
-    );
-
-    await mouse.drag(
-      straightTo(global.gamePositionToScreenPosition(global.resolutionConfig.activity_defi_caroussel_stop)),
-    );
-  }
-
-  async prepareConflit(positionToOpenPopup: Position): Promise<void> {
-    await mouse.move(straightTo(global.gamePositionToScreenPosition(positionToOpenPopup)));
+  async prepareConflit(): Promise<void> {
+    await mouse.move(straightTo(global.gamePositionToScreenPosition(global.resolutionConfig.activity_defi_conflit)));
     await mouse.click(Button.LEFT);
   }
 

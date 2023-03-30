@@ -1,9 +1,8 @@
 {
     "2560x1440": {
-        "activity_button": { "x": 2258, "y": 64 },
-        "activity_defi_tab": { "x": 333, "y": 783 },
-        "activity_defi_caroussel_start": { "x": 2019, "y": 690 },
-        "activity_defi_caroussel_stop": { "x": 600, "y": 690 },
+        "activity_button": { "x": 2280, "y": 63 },
+        "activity_defi_tab": { "x": 140, "y": 885 },
+        "activity_defi_conflit": { "x": 1370, "y": 280 },
         "activity_defi_go": { "x": 1919, "y": 1063 },
         "activity_defi_group": { "x": 1684, "y": 770 },
         "activity_defi_help": { "x": 1080, "y": 1164 },
@@ -14,9 +13,8 @@
     },
     "3440x1440": {
         "activity_button": { "x": 3125, "y": 65 },
-        "activity_defi_tab": { "x": 775, "y": 780 },
-        "activity_defi_caroussel_start": { "x": 2470, "y": 675 },
-        "activity_defi_caroussel_stop": { "x": 1120, "y": 675 },
+        "activity_defi_tab": { "x": 140, "y": 885 },
+        "activity_defi_conflit": { "x": 1370, "y": 280 },
         "activity_defi_go": { "x": 2360, "y": 1065 },
         "activity_defi_group": { "x": 2130, "y": 775 },
         "activity_defi_help": { "x": 1520, "y": 1165 },

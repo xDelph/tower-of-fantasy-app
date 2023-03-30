@@ -30,7 +30,7 @@ export class ConflitFrontalierAction {
 
     this.updateState(
       ConflitFrontalierState.UNKNOWN,
-      ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITHOUT_CONFLIT_OPTION,
+      ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB,
     );
   }
 
@@ -49,22 +49,10 @@ export class ConflitFrontalierAction {
     switch (this.state) {
       case ConflitFrontalierState.AVENTURE_MENU:
         await this.bot.switchToAventureDefiTab();
-        this.updateState(analyzerState, ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITHOUT_CONFLIT_OPTION);
+        this.updateState(analyzerState, ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB);
         break;
-      case ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITHOUT_CONFLIT_OPTION:
-        if (analyzerState === ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITH_CONFLIT_OPTION) {
-          await this.bot.prepareConflit(this.analyzer.positionToOpenPopup);
-          await sleep(1000);
-          await this.bot.launchConflit();
-          this.updateState(analyzerState, ConflitFrontalierState.CONFLIT_POPUP_MATCHMAKING);
-          break;
-        }
-
-        await this.bot.dragDefiCarrousel();
-        this.updateState(analyzerState, ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITH_CONFLIT_OPTION);
-        break;
-      case ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB_WITH_CONFLIT_OPTION:
-        await this.bot.prepareConflit(this.analyzer.positionToOpenPopup);
+      case ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB:
+        await this.bot.prepareConflit();
         await sleep(1000);
         await this.bot.launchConflit();
         this.updateState(analyzerState, ConflitFrontalierState.CONFLIT_POPUP_MATCHMAKING);
