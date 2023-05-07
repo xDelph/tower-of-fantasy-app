@@ -5,7 +5,7 @@ import sleep from '../../shared/sleep';
 export class ConflitFrontalierBot {
   constructor() {
     mouse.config.autoDelayMs = 0;
-    mouse.config.mouseSpeed = 5000;
+    mouse.config.mouseSpeed = 10000;
   }
 
   async openAventureMenu(): Promise<void> {

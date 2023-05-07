@@ -5,12 +5,12 @@ dotenv.config();
 
 import './global';
 
-import { ConflitFrontalierAction } from './actions/conflitFrontalier';
+import { EventAction } from './actions/event';
 import { GameProcess } from './tools/gameProcess';
 import { TesseractWorker } from './tools/worker';
 
 const gameProcess: GameProcess = new GameProcess();
-const conflitFrontalier: ConflitFrontalierAction = new ConflitFrontalierAction();
+const event: EventAction = new EventAction();
 
 // remove previous debug
 fs.readdirSync('./debug')
@@ -44,8 +44,8 @@ fs.readdirSync('./debug')
       }
 
       console.log(`\n---> NEW PROCESS TICK (number: ${global.iterationNumber}) <---`);
-      await conflitFrontalier.nextTick();
-      console.log('Loop done:', conflitFrontalier.loopDone);
+      await event.nextTick();
+      console.log('Loop done:', event.loopDone);
 
       global.iterationNumber++;
       if (global.iterationNumber === 25) {

@@ -49,7 +49,11 @@ export class ConflitFrontalierAction {
     switch (this.state) {
       case ConflitFrontalierState.AVENTURE_MENU:
         await this.bot.switchToAventureDefiTab();
-        this.updateState(analyzerState, ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB);
+        await sleep(1000);
+        await this.bot.prepareConflit();
+        await sleep(1000);
+        await this.bot.launchConflit();
+        this.updateState(analyzerState, ConflitFrontalierState.CONFLIT_POPUP_MATCHMAKING);
         break;
       case ConflitFrontalierState.AVENTURE_MENU_DEFI_TAB:
         await this.bot.prepareConflit();
